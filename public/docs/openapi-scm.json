@@ -1,0 +1,29 @@
+{
+    "openapi": "3.0.3",
+    "servers": [
+        {
+            "url": "http://172.33.0.4:8080",
+            "description": "development"
+        }
+    ],
+    "info": {
+        "title": "API shopping cart manager",
+        "version": "1.0"
+    },
+    "paths": {
+    },
+    "tags": [
+        {
+            "name": "Cart",
+            "description": "Cart management actions (create, update, get, add product, remove product, checkout)"
+        },
+        {
+            "name": "Product",
+            "description": "Product management actions"
+        },
+        {
+            "name": "Order",
+            "description": "Order management actions"
+        }
+    ]
+}
