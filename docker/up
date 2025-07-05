@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+docker build docker/images/php -t scm-php
+docker build docker/images/mysql -t scm-mysql
+docker build docker/images/nginx -t scm-nginx
+
+docker-compose up -d

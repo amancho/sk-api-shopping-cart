@@ -1,0 +1,57 @@
+networks:
+    shp-cart-net:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.33.0.0/16
+
+services:
+    mysql:
+        build:
+            context: ./docker/images/mysql
+            dockerfile: Dockerfile
+        container_name: shp-cart-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 'sk_adm_pwd'
+            MYSQL_DATABASE: 'sk_shopping_db'
+            MYSQL_USER: 'sk_user'
+            MYSQL_PASSWORD: 'sk_pwd'
+        ports:
+            - "3305:3306"
+        networks:
+            shp-cart-net:
+                ipv4_address: 172.33.0.3
+        tty: true
+        restart: always
+
+    nginx:
+        build:
+            context: ./docker/images/nginx
+            dockerfile: Dockerfile
+        container_name: shp-cart-nginx
+        tty: true
+        ports:
+            - "8080:80"
+            - "4043:443"
+        volumes:
+            - ./:/var/www
+            - ./docker/images/nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+            shp-cart-net:
+                ipv4_address: 172.33.0.4
+        depends_on:
+            - mysql
+
+    php:
+        build:
+            context: ./docker/images/php
+            dockerfile: Dockerfile
+        container_name: shp-cart-php
+        volumes:
+            - ./:/var/www
+        networks:
+            shp-cart-net:
+                ipv4_address: 172.33.0.5
+        depends_on:
+            - mysql
+        restart: always
