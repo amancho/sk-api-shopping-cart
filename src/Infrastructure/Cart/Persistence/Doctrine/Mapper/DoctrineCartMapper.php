@@ -22,7 +22,7 @@ class DoctrineCartMapper
         $doctrineCart->setId($cart->id()->value());
         $doctrineCart->setPublicId($cart->publicId()->value());
         $doctrineCart->setCode($cart->code()->value());
-        $doctrineCart->setStatus($cart->status()->value());
+        $doctrineCart->setStatus($cart->status()->value);
 
         if ($cart->shippingAddress() !== null) {
             $doctrineCart->setShippingName($cart->shippingAddress()->name());
@@ -67,7 +67,7 @@ class DoctrineCartMapper
             id: CartId::fromInt($doctrineCart->getId()),
             publicId: CartPublicId::fromUuid($doctrineCart->getPublicId()),
             code: CartCode::fromCode($doctrineCart->getCode()),
-            status: CartStatus::fromString($doctrineCart->getStatus()),
+            status: CartStatus::tryFrom($doctrineCart->getStatus()),
             shippingAddress: $shippingAddress,
             shippingEmail: $doctrineCart->getShippingEmail() ? CartShippingEmail::fromString($doctrineCart->getShippingEmail()) : null,
             shippingPhone: $doctrineCart->getShippingPhone() ? CartShippingPhone::fromString($doctrineCart->getShippingPhone()) : null,

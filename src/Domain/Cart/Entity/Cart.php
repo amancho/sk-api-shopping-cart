@@ -8,6 +8,7 @@ use App\Domain\Cart\ValueObject\CartPublicId;
 use App\Domain\Cart\ValueObject\CartShippingEmail;
 use App\Domain\Cart\ValueObject\CartShippingPhone;
 use App\Domain\Cart\ValueObject\CartStatus;
+use App\Domain\Shared\Exception\InvalidUuid;
 
 readonly class Cart
 {
@@ -24,6 +25,38 @@ readonly class Cart
         private ?int $orderId = null,
         private ?array $metadata = null,
     ) {}
+
+    /**
+     * @throws InvalidUuid
+     */
+    public static function build(
+        int $id,
+        string $publicId,
+        string $code,
+        CartStatus $status,
+        ?CartShippingAddress $shippingAddress = null,
+        ?CartShippingEmail $shippingEmail = null,
+        ?CartShippingPhone $shippingPhone = null,
+        ?string $checkoutId = null,
+        ?int $userId = null,
+        ?int $orderId = null,
+        ?array $metadata = null,
+    ): Cart
+    {
+        return new self(
+            id: CartId::fromInt($id),
+            publicId: CartPublicId::fromUuid($publicId),
+            code: CartCode::fromCode($code),
+            status: $status,
+            shippingAddress: $shippingAddress,
+            shippingEmail: $shippingEmail,
+            shippingPhone: $shippingPhone,
+            checkoutId: $checkoutId,
+            userId: $userId,
+            orderId: $orderId,
+            metadata: $metadata,
+        );
+    }
 
     public function id(): CartId
     {

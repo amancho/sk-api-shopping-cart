@@ -62,4 +62,16 @@ readonly class CartShippingAddress
     {
         return $this->country;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name'          => $this->name,
+            'address'       => $this->address,
+            'city'          => $this->city,
+            'postal_code'   => $this->postalCode,
+            'province'      => $this->province,
+            'country'       => $this->country,
+        ];
+    }
 }
