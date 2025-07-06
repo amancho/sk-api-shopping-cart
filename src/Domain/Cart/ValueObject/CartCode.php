@@ -12,6 +12,11 @@ class CartCode
     {
     }
 
+    public static function fromCode(string $code): self
+    {
+        return new self(Code::fromString($code));
+    }
+
     public static function create(): self
     {
         return new self(Code::create(CartCode::PREFIX));
