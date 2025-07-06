@@ -40,6 +40,7 @@
 # PHPUnit
 /app/phpunit.xml
 /phpunit.xml
+/phpunit.dist.xml
 /.phpunit.cache/
 
 # Build data
@@ -48,11 +49,15 @@
 # Composer PHAR
 /composer.phar
 
+/compose.override.yaml
+
 # Embedded web-server pid file
 /.web-server-pid
 
 ###> symfony/framework-bundle ###
 /.env
+/.env.dev
+/.env.test
 /.env.local
 /.env.local.php
 /.env.*.local
