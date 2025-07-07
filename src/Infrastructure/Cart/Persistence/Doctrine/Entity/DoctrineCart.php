@@ -103,7 +103,7 @@ class DoctrineCart extends AbstractTimestampedEntity
         return $this->checkoutId;
     }
 
-    public function setCheckoutId(string $checkoutId): self
+    public function setCheckoutId(?string $checkoutId): self
     {
         $this->checkoutId = $checkoutId;
         return $this;

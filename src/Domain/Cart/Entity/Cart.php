@@ -21,6 +21,7 @@ readonly class Cart
         private ?CartShippingEmail $shippingEmail = null,
         private ?CartShippingPhone $shippingPhone = null,
         private ?string $checkoutId = null,
+        private ?string $sessionId = null,
         private ?int $userId = null,
         private ?int $orderId = null,
         private ?array $metadata = null,
@@ -38,12 +39,13 @@ readonly class Cart
         ?CartShippingEmail $shippingEmail = null,
         ?CartShippingPhone $shippingPhone = null,
         ?string $checkoutId = null,
+        ?string $sessionId = null,
         ?int $userId = null,
         ?int $orderId = null,
         ?array $metadata = null,
     ): Cart
     {
-        return new self(
+        return new Cart(
             id: CartId::fromInt($id),
             publicId: CartPublicId::fromUuid($publicId),
             code: CartCode::fromCode($code),
@@ -52,9 +54,34 @@ readonly class Cart
             shippingEmail: $shippingEmail,
             shippingPhone: $shippingPhone,
             checkoutId: $checkoutId,
+            sessionId: $sessionId,
             userId: $userId,
             orderId: $orderId,
             metadata: $metadata,
+        );
+    }
+
+    /**
+     * @throws InvalidUuid
+     */
+    public static function create(
+        ?string $sessionId = null,
+        ?int $userId = null
+    ): Cart
+    {
+        return new Cart(
+            id: CartId::fromInt(0),
+            publicId: CartPublicId::create(),
+            code: CartCode::create(),
+            status: CartStatus::NEW,
+            shippingAddress: null,
+            shippingEmail: null,
+            shippingPhone: null,
+            checkoutId: null,
+            sessionId: $sessionId,
+            userId: $userId,
+            orderId: null,
+            metadata: null,
         );
     }
 
@@ -91,6 +118,11 @@ readonly class Cart
     public function shippingEmail(): ?CartShippingEmail
     {
         return $this->shippingEmail;
+    }
+
+    public function sessionId(): ?string
+    {
+        return $this->sessionId;
     }
 
     public function checkoutId(): ?string

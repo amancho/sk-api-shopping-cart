@@ -7,4 +7,6 @@ use App\Domain\Cart\Entity\Cart;
 interface CartRepositoryInterface
 {
     public function findByPublicId(string $publicId): ?Cart;
+
+    public function save(Cart $cart): ?Cart;
 }

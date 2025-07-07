@@ -12,6 +12,12 @@ readonly class CartPublicId
     }
 
     /** @throws InvalidUuid */
+    public static function create(): CartPublicId
+    {
+        return new CartPublicId(Uuid::create());
+    }
+
+    /** @throws InvalidUuid */
     public static function fromUuid(string $uuid): CartPublicId
     {
         return new CartPublicId(Uuid::fromString($uuid));

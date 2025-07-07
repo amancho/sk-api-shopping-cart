@@ -11,6 +11,134 @@
         "version": "1.0"
     },
     "paths": {
+        "/carts": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Create new Cart",
+                "description": "Create new cart associated to session or user",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "userId": {
+                                        "type": "integer",
+                                        "description": "Internal user id",
+                                        "example": 123
+                                    },
+                                    "sessionId": {
+                                        "type": "string",
+                                        "description": "session id",
+                                        "example": ""
+                                    }
+                                },
+                                "required": ["sessionId"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "501c4b5b-00f9-49ef-a649-969caf8e95c0"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "CA-20250707004126-432"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "new"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "user@email.com"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "666444333"
+                                        },
+                                        "shipping_address": {
+                                            "type": "object",
+                                            "description": "Shipping address associated with the cart",
+                                            "properties": {
+                                                "street": {
+                                                    "type": "string",
+                                                    "example": "Mayor, 154"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Gijón"
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "example": "Asturias"
+                                                },
+                                                "postal_code": {
+                                                    "type": "string",
+                                                    "example": "33206"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "España"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Cart with id # not found"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unknown error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Unknown error"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/carts/{id}": {
             "get": {
                 "tags": [
