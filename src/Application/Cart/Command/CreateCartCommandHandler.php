@@ -15,13 +15,15 @@ readonly class CreateCartCommandHandler
     /**
      * @throws InvalidUuid
      */
-    public function __invoke(CreateCartCommand $command): void
+    public function __invoke(CreateCartCommand $command): string
     {
         $cart = Cart::create(
             sessionId: $command->sessionId(),
             userId: $command->userId()
         );
 
-        $this->repository->save($cart);
+        $cartCreated = $this->repository->save($cart);
+
+        return $cartCreated->publicId()->value();
     }
 }

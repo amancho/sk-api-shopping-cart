@@ -47,6 +47,8 @@ services:
             context: ./docker/images/php
             dockerfile: Dockerfile
         container_name: shp-cart-php
+        environment:
+            - XDEBUG_MODE=coverage
         volumes:
             - ./:/var/www
         networks:

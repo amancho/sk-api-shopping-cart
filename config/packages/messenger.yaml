@@ -8,3 +8,4 @@ framework:
             sync: 'sync://'
 
         routing:
+            'App\Application\Cart\Command\CreateCartCommand': sync

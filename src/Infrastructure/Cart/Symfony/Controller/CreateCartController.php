@@ -8,12 +8,18 @@ use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-readonly class CreateCartController
+final class CreateCartController
 {
-    public function __construct(private MessageBusInterface $bus) {}
+    use HandleTrait;
+
+    public function __construct(MessageBusInterface $bus)
+    {
+        $this->messageBus = $bus;
+    }
 
     #[Route('/carts', name: 'cart_create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
@@ -26,14 +32,14 @@ readonly class CreateCartController
             }
 
             $command = new CreateCartCommand(
-                $data['userId'],
-                $data['sessionId']
+                userId: $data['userId'] !== null ? intval($data['userId']) : null,
+                sessionId: $data['sessionId'] !== null ? strval($data['sessionId']) : null,
             );
 
             $this->validate($command);
-            $this->bus->dispatch($command);
+            $cartPublicId = $this->handle($command);
 
-            return new JsonResponse([], Response::HTTP_CREATED);
+            return new JsonResponse(['id' => $cartPublicId], Response::HTTP_CREATED);
 
         } catch (LogicException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
