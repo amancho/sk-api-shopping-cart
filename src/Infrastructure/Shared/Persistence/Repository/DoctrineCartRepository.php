@@ -44,4 +44,16 @@ class DoctrineCartRepository implements CartRepositoryInterface
 
         return DoctrineCartMapper::toDomain($cart);
     }
+
+    /**
+     * @throws InvalidUuid
+     */
+    public function save(Cart $cart): ?Cart
+    {
+        $doctrineCart = DoctrineCartMapper::fromDomain($cart);
+        $this->em->persist($doctrineCart);
+        $this->em->flush();
+
+        return DoctrineCartMapper::toDomain($doctrineCart);
+    }
 }

@@ -72,10 +72,16 @@ API to manage shopping cart actions and checkout process
 └── symfony.lock
 ```
 
+## Explanation of use Auto-increment IDs and Public UUIDs
+- Use **Auto-increment IDs** internally in the database for efficiency and relation.
+- Use **Public UUID** in API endpoints when sharing with users or other systems for security.
+
+
 ## Project set up
 
-Follow this steps to create a local database with dummy data set.
-Please wait a couple of seconds after running each command so the services can start properly.
+- Follow this steps to create a local database with dummy data set.
+- Please wait a couple of seconds after running each command so the services can start properly.
+- Check cart.public_id to add, modify and delete products
 
 ### Build and start
 ```
@@ -102,13 +108,27 @@ make up
 Functional open API tool
 http://172.33.0.4:8080/api-doc.html
 
-Execute phpstan to static analysis
+## Example to 
+- Create cart (POST) 
+```
+http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23
+```
+- Add item to cart (PUT)
+```
+http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23/item/62bf234f-984a-4df8-8f03-e0ea81bddc46
+```
+- Remove item from cart (DELETE)
+```
+http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23/item/62bf234f-984a-4df8-8f03-e0ea81bddc46
+```
+
+## Execute phpstan to static analysis
 
 ```
 make phpstan
 ```
 
-Execute
+### Execute tests
 
 ```
 make test

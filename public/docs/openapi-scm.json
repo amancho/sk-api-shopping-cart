@@ -11,6 +11,92 @@
         "version": "1.0"
     },
     "paths": {
+        "/carts": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Create new Cart",
+                "description": "Create new cart associated to session or user",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "userId": {
+                                        "type": "integer",
+                                        "description": "Internal user id",
+                                        "example": 123
+                                    },
+                                    "sessionId": {
+                                        "type": "string",
+                                        "description": "session id",
+                                        "example": ""
+                                    }
+                                },
+                                "required": ["sessionId"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cart created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "501c4b5b-00f9-49ef-a649-969caf8e95c0"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Cart with id # not found"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unknown error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Unknown error"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/carts/{id}": {
             "get": {
                 "tags": [

@@ -1,5 +1,7 @@
 FROM php:8.2-fpm
 
+ENV XDEBUG_MODE=coverage
+
 RUN apt-get update && apt-get install -y \
     git zip unzip curl libpq-dev libonig-dev libxml2-dev libzip-dev \
     && docker-php-ext-install pdo pdo_mysql zip
