@@ -3,7 +3,6 @@
 namespace App\Infrastructure\Cart\Symfony\Controller;
 
 use App\Application\Cart\Command\CheckoutCartCommand;
-use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Exception\CartValidationException;
 use Exception;
 use LogicException;
@@ -34,7 +33,7 @@ readonly class CheckoutCartController
 
             $command = new CheckoutCartCommand(
                 publicId: $publicId,
-                checkoutId: $data['checkoutId'] ?? strval(null),
+                checkoutId: isset($data['checkoutId']) ? strval($data['checkoutId']) : null,
             );
 
             $this->validate($command);

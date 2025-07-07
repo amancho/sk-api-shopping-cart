@@ -80,14 +80,14 @@ readonly class DoctrineCartRepository implements CartRepositoryInterface
         $doctrineCart->setMetadata($cart->meta());
         $doctrineCart->setCheckoutId($cart->checkoutId());
 
-        $doctrineCart->setShippingName($cart->shippingAddress()->name());
-        $doctrineCart->setShippingAddress($cart->shippingAddress()->address());
-        $doctrineCart->setShippingCity($cart->shippingAddress()->city());
-        $doctrineCart->setShippingPostalCode($cart->shippingAddress()->postalCode());
-        $doctrineCart->setShippingProvince($cart->shippingAddress()->province());
-        $doctrineCart->setShippingCountry($cart->shippingAddress()->country());
-        $doctrineCart->setShippingEmail($cart->shippingEmail()->value());
-        $doctrineCart->setShippingPhone($cart->shippingPhone()->value());
+        $doctrineCart->setShippingName($cart->shippingAddress()?->name());
+        $doctrineCart->setShippingAddress($cart->shippingAddress()?->address());
+        $doctrineCart->setShippingCity($cart->shippingAddress()?->city());
+        $doctrineCart->setShippingPostalCode($cart->shippingAddress()?->postalCode());
+        $doctrineCart->setShippingProvince($cart->shippingAddress()?->province());
+        $doctrineCart->setShippingCountry($cart->shippingAddress()?->country());
+        $doctrineCart->setShippingEmail($cart->shippingEmail()?->value());
+        $doctrineCart->setShippingPhone($cart->shippingPhone()?->value());
 
         $this->em->flush();
 

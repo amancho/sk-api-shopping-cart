@@ -2,11 +2,11 @@
 
 namespace App\Tests\Infrastructure\Cart\Symfony\Controller;
 
-use _PHPStan_ac6dae9b0\Symfony\Component\String\Exception\RuntimeException;
 use App\Application\Cart\Command\CheckoutCartCommand;
 use App\Domain\Shared\ValueObject\Uuid;
 use App\Infrastructure\Cart\Symfony\Controller\CheckoutCartController;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
