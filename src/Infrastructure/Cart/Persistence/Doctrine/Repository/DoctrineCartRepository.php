@@ -67,13 +67,27 @@ readonly class DoctrineCartRepository implements CartRepositoryInterface
      */
     public function update(Cart $cart): ?Cart
     {
-        $doctrineCart = $this->em->find(DoctrineCart::class, $cart->id());
+        $doctrineCart = $this->em->find(DoctrineCart::class, $cart->id()->value());
 
         if ($doctrineCart === null) {
             throw CartNotFoundException::createFromId($cart->id());
         }
 
-        $doctrineCart = DoctrineCartMapper::fromDomain($cart);
+        $doctrineCart->setStatus($cart->status()->value);
+        $doctrineCart->setUserId($cart->userId());
+        $doctrineCart->setOrderId($cart->orderId());
+        $doctrineCart->setSessionId($cart->sessionId());
+        $doctrineCart->setMetadata($cart->meta());
+        $doctrineCart->setCheckoutId($cart->checkoutId());
+
+        $doctrineCart->setShippingName($cart->shippingAddress()->name());
+        $doctrineCart->setShippingAddress($cart->shippingAddress()->address());
+        $doctrineCart->setShippingCity($cart->shippingAddress()->city());
+        $doctrineCart->setShippingPostalCode($cart->shippingAddress()->postalCode());
+        $doctrineCart->setShippingProvince($cart->shippingAddress()->province());
+        $doctrineCart->setShippingCountry($cart->shippingAddress()->country());
+        $doctrineCart->setShippingEmail($cart->shippingEmail()->value());
+        $doctrineCart->setShippingPhone($cart->shippingPhone()->value());
 
         $this->em->flush();
 

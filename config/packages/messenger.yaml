@@ -7,5 +7,10 @@ framework:
         transports:
             sync: 'sync://'
 
+            async:
+                dsn: 'doctrine://default'
+
         routing:
             'App\Application\Cart\Command\CreateCartCommand': sync
+
+            'App\Domain\Cart\Events\CartCheckoutEvent': async

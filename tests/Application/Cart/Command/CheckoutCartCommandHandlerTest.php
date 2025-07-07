@@ -12,6 +12,7 @@ use App\Domain\Cart\Repository\CartRepositoryInterface;
 use App\Domain\Cart\ValueObject\CartId;
 use App\Domain\Cart\ValueObject\CartStatus;
 use App\Domain\Shared\ValueObject\Uuid;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -33,12 +34,19 @@ class CheckoutCartCommandHandlerTest extends TestCase
         );
     }
 
+    public function testShouldThrowExceptionIfCartEmptyParameters(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new CheckoutCartCommand('', '');
+    }
+
     public function testShouldThrowExceptionIfCartNotFound(): void
     {
         $checkoutId     = md5('1234567890');
         $cardPublicId   = Uuid::create()->value();
 
-        $command = new CheckoutCartCommand($cardPublicId, 'test-public-id' , $checkoutId);
+        $command = new CheckoutCartCommand($cardPublicId, $checkoutId);
 
         $this->repository->expects($this->once())
             ->method('findByPublicId')

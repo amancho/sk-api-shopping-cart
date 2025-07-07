@@ -213,6 +213,86 @@
                     }
                 }
             }
+        },
+        "/carts/{id}/checkout": {
+            "put": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Checkout Cart",
+                "description": "Finish checkout process",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart public uuid",
+                        "required": true,
+                        "example": "501c4b5b-00f9-49ef-a649-969caf8e95c0",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "checkoutId": {
+                                        "type": "string",
+                                        "description": "Checkout id, from payment process",
+                                        "example": "chk_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                    }
+                                },
+                                "required": ["checkoutId"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Cart checkout successfully"
+                    },
+                    "404": {
+                        "description": "Not found cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Cart with id # not found"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unknown error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Unknown error"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "tags": [

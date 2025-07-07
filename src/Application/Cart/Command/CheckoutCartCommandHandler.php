@@ -13,7 +13,7 @@ readonly class CheckoutCartCommandHandler
 {
     public function __construct(
         private CartRepositoryInterface $repository,
-        private MessageBusInterface $bus
+        private MessageBusInterface $eventBus
     )
     {
     }
@@ -34,7 +34,7 @@ readonly class CheckoutCartCommandHandler
 
         $this->repository->update($cart);
 
-        $this->bus->dispatch(
+        $this->eventBus->dispatch(
             new CartCheckoutEvent($cart->id(), $cart->checkoutId())
         );
     }

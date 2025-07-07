@@ -3,12 +3,14 @@
 namespace App\Infrastructure\Cart\Symfony\Controller;
 
 use App\Application\Cart\Command\CheckoutCartCommand;
+use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Exception\CartValidationException;
 use Exception;
 use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +23,7 @@ readonly class CheckoutCartController
     ) {}
 
     #[Route('/carts/{publicId}/checkout', name: 'cart_checkout', methods: ['PUT'])]
-    public function create(Request $request, string $publicId): JsonResponse
+    public function checkout(Request $request, string $publicId): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -40,9 +42,14 @@ readonly class CheckoutCartController
 
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
 
-        } catch (LogicException $exception) {
+        } catch (ExceptionInterface | LogicException $exception) {
             return new JsonResponse(
-                ['error' => $exception->getMessage()],
+                ['error' => $exception->getPrevious()?->getMessage() ?? $exception->getMessage()],
+                Response::HTTP_BAD_REQUEST
+            );
+        } catch (CartValidationException $exception) {
+            return new JsonResponse(
+                ['error' => $exception->getErrors()],
                 Response::HTTP_BAD_REQUEST
             );
         } catch (Exception) {
