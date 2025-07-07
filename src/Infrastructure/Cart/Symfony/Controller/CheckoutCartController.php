@@ -2,31 +2,27 @@
 
 namespace App\Infrastructure\Cart\Symfony\Controller;
 
-use App\Application\Cart\Command\CreateCartCommand;
+use App\Application\Cart\Command\CheckoutCartCommand;
 use App\Domain\Cart\Exception\CartValidationException;
 use Exception;
 use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class CreateCartController
+readonly class CheckoutCartController
 {
-    use HandleTrait;
-
     public function __construct(
-        MessageBusInterface $bus,
-        private readonly ValidatorInterface $validator
-    ) {
-        $this->messageBus = $bus;
-    }
+        private MessageBusInterface $bus,
+        private ValidatorInterface  $validator
+    ) {}
 
-    #[Route('/carts', name: 'cart_create', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    #[Route('/carts/{publicId}/checkout', name: 'cart_checkout', methods: ['PUT'])]
+    public function checkout(Request $request, string $publicId): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -35,19 +31,19 @@ final class CreateCartController
                 throw new LogicException('Invalid data');
             }
 
-            $command = new CreateCartCommand(
-                userId: isset($data['userId']) ? intval($data['userId']) : null,
-                sessionId: isset($data['sessionId']) ? strval($data['sessionId']) : null,
+            $command = new CheckoutCartCommand(
+                publicId: $publicId,
+                checkoutId: isset($data['checkoutId']) ? strval($data['checkoutId']) : null,
             );
 
             $this->validate($command);
-            $cartPublicId = $this->handle($command);
+            $this->bus->dispatch($command);
 
-            return new JsonResponse(['id' => $cartPublicId], Response::HTTP_CREATED);
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
 
-        } catch (LogicException $exception) {
+        } catch (ExceptionInterface | LogicException $exception) {
             return new JsonResponse(
-                ['error' => $exception->getMessage()],
+                ['error' => $exception->getPrevious()?->getMessage() ?? $exception->getMessage()],
                 Response::HTTP_BAD_REQUEST
             );
         } catch (CartValidationException $exception) {
@@ -66,7 +62,7 @@ final class CreateCartController
     /**
      * @throws CartValidationException
      */
-    private function validate(CreateCartCommand $command): void
+    private function validate(CheckoutCartCommand $command): void
     {
         $errors = $this->validator->validate($command);
         $errorMessages = [];
