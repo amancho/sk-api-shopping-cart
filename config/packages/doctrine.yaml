@@ -3,4 +3,12 @@ doctrine:
         url: '%env(resolve:DATABASE_URL)%'
 
     orm:
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+
         mappings:
+            Cart:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Infrastructure/Cart/Persistence/Doctrine/Entity'
+                prefix: 'App\Infrastructure\Cart\Persistence\Doctrine\Entity'
+                alias: Cart

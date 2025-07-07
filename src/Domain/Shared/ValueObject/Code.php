@@ -4,21 +4,23 @@ namespace App\Domain\Shared\ValueObject;
 
 use DateTimeImmutable;
 
-final class Code
+final readonly class Code
 {
-    private string $code;
-
-    public function __construct(string $prefix)
+    public function __construct(private string $code)
     {
-        $this->code = $this->generate($prefix);
+    }
+
+    public static function fromString(string $code): self
+    {
+        return new Code($code);
     }
 
     public static function create(string $prefix): self
     {
-        return new Code($prefix);
+        return new Code(self::generate($prefix));
     }
 
-    private function generate(string $prefix): string
+    private static function generate(string $prefix): string
     {
         $timestamp = (new DateTimeImmutable())->format('YmdHis');
         $random = \random_int(100, 999);
