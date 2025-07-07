@@ -2,6 +2,7 @@
 
 namespace App\Domain\Cart\Entity;
 
+use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\ValueObject\CartCode;
 use App\Domain\Cart\ValueObject\CartId;
 use App\Domain\Cart\ValueObject\CartPublicId;
@@ -10,12 +11,12 @@ use App\Domain\Cart\ValueObject\CartShippingPhone;
 use App\Domain\Cart\ValueObject\CartStatus;
 use App\Domain\Shared\Exception\InvalidUuid;
 
-readonly class Cart
+class Cart
 {
     public function __construct(
-        private CartId $id,
-        private CartPublicId $publicId,
-        private CartCode $code,
+        private readonly CartId $id,
+        private readonly CartPublicId $publicId,
+        private readonly CartCode $code,
         private CartStatus $status,
         private ?CartShippingAddress $shippingAddress = null,
         private ?CartShippingEmail $shippingEmail = null,
@@ -143,5 +144,23 @@ readonly class Cart
     public function meta(): ?array
     {
         return $this->metadata;
+    }
+
+    private function complete(): void
+    {
+        $this->status = CartStatus::COMPLETED;
+    }
+
+    /**
+     * @throws CartInvalidStatusException
+     */
+    public function checkout(string $checkoutId): void
+    {
+        if (!in_array($this->status(), [CartStatus::PENDING, CartStatus::NEW])) {
+            throw CartInvalidStatusException::create($this->status());
+        }
+
+        $this->checkoutId = $checkoutId;
+        $this->complete();
     }
 }
