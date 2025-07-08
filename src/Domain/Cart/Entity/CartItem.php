@@ -15,8 +15,8 @@ readonly class CartItem
         private CartItemId       $id,
         private CartItemPublicId $publicId,
         private CartId           $cartId,
-        private CartItemPrice    $cartItemPrice,
-        private CartItemQuantity $cartItemQuantity,
+        private CartItemPrice    $price,
+        private CartItemQuantity $quantity,
         private ?int             $productId = null,
         private ?string          $name = null,
         private ?string          $color = null,
@@ -42,8 +42,8 @@ readonly class CartItem
             id: CartItemId::fromInt($id),
             publicId: CartItemPublicId::fromUuid($publicId),
             cartId: CartId::fromInt($cartId),
-            cartItemPrice: CartItemPrice::fromInt($price),
-            cartItemQuantity: CartItemQuantity::fromInt($quantity),
+            price: CartItemPrice::fromInt($price),
+            quantity: CartItemQuantity::fromInt($quantity),
             productId: $productId,
             name: $name,
             color: $color,
@@ -68,8 +68,8 @@ readonly class CartItem
             id: CartItemId::fromInt(0),
             publicId: CartItemPublicId::create(),
             cartId: CartId::fromInt($cartId),
-            cartItemPrice: CartItemPrice::fromInt($price),
-            cartItemQuantity: CartItemQuantity::fromInt($quantity),
+            price: CartItemPrice::fromInt($price),
+            quantity: CartItemQuantity::fromInt($quantity),
             productId: $productId,
             name: $name,
             color: $color,
@@ -92,14 +92,14 @@ readonly class CartItem
         return $this->cartId;
     }
 
-    public function cartItemPrice(): CartItemPrice
+    public function price(): CartItemPrice
     {
-        return $this->cartItemPrice;
+        return $this->price;
     }
 
-    public function cartItemQuantity(): CartItemQuantity
+    public function quantity(): CartItemQuantity
     {
-        return $this->cartItemQuantity;
+        return $this->quantity;
     }
 
     public function productId(): ?int
@@ -120,5 +120,24 @@ readonly class CartItem
     public function size(): ?string
     {
         return $this->size;
+    }
+
+    public function total(): float
+    {
+        return $this->price()->asDecimal() * $this->quantity()->value();
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id'           => $this->publicId()->value(),
+            'product_id'   => $this->productId(),
+            'name'         => $this->name(),
+            'color'        => $this->color(),
+            'size'         => $this->size(),
+            'quantity'     => $this->quantity()->value(),
+            'price'        => $this->price()->asDecimal(),
+            'total'        => $this->total(),
+        ];
     }
 }

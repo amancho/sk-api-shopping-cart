@@ -15,7 +15,7 @@ build:
 	docker-compose up --build -d
 
 prepare:
-	${DOCKER_EXEC} -it ${PHP_CONTAINER} composer install --no-interaction
+	${DOCKER_EXEC} -it ${PHP_CONTAINER} composer install --no-interaction --no-scripts
 	sleep 4
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console cache:clear --no-warmup
 

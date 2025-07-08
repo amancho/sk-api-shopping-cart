@@ -17,7 +17,7 @@ class DoctrineCartItem extends AbstractTimestampedEntity
     #[ORM\Column(name: 'public_id', type: 'guid', unique: true)]
     private string $publicId;
 
-    #[ORM\ManyToOne(targetEntity: DoctrineCart::class)]
+    #[ORM\ManyToOne(targetEntity: DoctrineCart::class, inversedBy: 'items')]
     #[ORM\JoinColumn(name: 'cart_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private DoctrineCart $cart;
 

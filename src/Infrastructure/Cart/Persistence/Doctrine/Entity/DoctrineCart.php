@@ -3,6 +3,8 @@
 namespace App\Infrastructure\Cart\Persistence\Doctrine\Entity;
 
 use App\Infrastructure\Shared\Persistence\Doctrine\Entity\AbstractTimestampedEntity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -10,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class DoctrineCart extends AbstractTimestampedEntity
 {
+    #[ORM\OneToMany(targetEntity: DoctrineCartItem::class, mappedBy: 'cart', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $items;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -62,6 +67,11 @@ class DoctrineCart extends AbstractTimestampedEntity
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $metadata = null;
+
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+    }
 
     public function setId(int $id): self
     {
@@ -248,5 +258,11 @@ class DoctrineCart extends AbstractTimestampedEntity
     {
         $this->metadata = $metadata;
         return $this;
+    }
+
+    /** @return Collection<int, DoctrineCartItem> */
+    public function getItems(): Collection
+    {
+        return $this->items;
     }
 }

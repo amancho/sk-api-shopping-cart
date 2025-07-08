@@ -30,8 +30,8 @@ class DoctrineCartItemMapper
         $doctrineCartItem->setId($cartItem->id()->value());
         $doctrineCartItem->setPublicId($cartItem->publicId()->value());
 
-        $doctrineCartItem->setQuantity($cartItem->cartItemQuantity()->value());
-        $doctrineCartItem->setPrice($cartItem->cartItemPrice()->value());
+        $doctrineCartItem->setQuantity($cartItem->quantity()->value());
+        $doctrineCartItem->setPrice($cartItem->price()->value());
 
         $doctrineCartItem->setProductId($cartItem->productId());
         $doctrineCartItem->setName($cartItem->name());
@@ -50,8 +50,8 @@ class DoctrineCartItemMapper
             id: CartItemId::fromInt($doctrineCartItem->getId()),
             publicId: CartItemPublicId::fromUuid($doctrineCartItem->getPublicId()),
             cartId: CartId::fromInt($doctrineCartItem->getCart()->getId()),
-            cartItemPrice: CartItemPrice::fromInt($doctrineCartItem->getPrice()),
-            cartItemQuantity: CartItemQuantity::fromInt($doctrineCartItem->getQuantity()),
+            price: CartItemPrice::fromInt($doctrineCartItem->getPrice()),
+            quantity: CartItemQuantity::fromInt($doctrineCartItem->getQuantity()),
             productId: $doctrineCartItem->getProductId(),
             color: $doctrineCartItem->getColor(),
             size: $doctrineCartItem->getSize()

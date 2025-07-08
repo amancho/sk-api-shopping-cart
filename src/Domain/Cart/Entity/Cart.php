@@ -13,6 +13,8 @@ use App\Domain\Shared\Exception\InvalidUuid;
 
 class Cart
 {
+    private array $items = [];
+
     public function __construct(
         private readonly CartId               $id,
         private readonly CartPublicId         $publicId,
@@ -164,9 +166,21 @@ class Cart
         $this->complete();
     }
 
-    /** @return array<CartItem> */
-    public function items(): array
+    public function addItem(CartItem $cartItem): void
     {
-        return [];
+        $this->items[] = $cartItem;
+    }
+
+    public function addItems(array $items): void
+    {
+        $this->items = array_merge($this->items, $items);
+    }
+
+    /**
+     * @return array<CartItem>|null
+     */
+    public function items(): ?array
+    {
+        return $this->items;
     }
 }
