@@ -3,7 +3,6 @@
 namespace App\Infrastructure\Cart\Symfony\Controller;
 
 use App\Application\Cart\Command\AddItemToCartCommand;
-use App\Domain\Cart\Entity\CartItem;
 use Exception;
 use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;

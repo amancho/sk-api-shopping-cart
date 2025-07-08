@@ -78,4 +78,18 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
 
         return DoctrineCartItemMapper::toDomain($doctrineCartItem);
     }
+
+    /**
+     * @throws ORMException
+     */
+    public function delete(CartItem $cartItem): void
+    {
+        $doctrineCartItem = $this->em->getReference(
+            DoctrineCartItem::class,
+            $cartItem->id()->value()
+        );
+
+        $this->em->remove($doctrineCartItem);
+        $this->em->flush();
+    }
 }

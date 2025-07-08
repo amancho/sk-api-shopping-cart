@@ -17,4 +17,9 @@ readonly class CartId
     {
         return $this->id;
     }
+
+    public function equals(int $other): bool
+    {
+        return $other === $this->id;
+    }
 }
