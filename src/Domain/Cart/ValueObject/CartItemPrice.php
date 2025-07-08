@@ -6,9 +6,9 @@ namespace App\Domain\Cart\ValueObject;
 
 use InvalidArgumentException;
 
-final class CartItemPrice
+final readonly class CartItemPrice
 {
-    private readonly int $cents;
+    private int $cents;
 
     public function __construct(int $cents)
     {

@@ -2,24 +2,13 @@
 
 namespace App\Application\Cart\Command;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
-class CreateCartCommand
+readonly class CreateCartCommand
 {
-    #[Assert\Type(type: 'integer')]
-    public ?int $userId;
-
-    #[Assert\Length(min: 2, max: 255)]
-    #[Assert\Type(type: 'string')]
-    public ?string $sessionId;
-
     public function __construct(
-        ?int $userId = null,
-        ?string $sessionId = null,
+        private ?int    $userId = null,
+        private ?string $sessionId = null,
     )
     {
-        $this->userId = $userId;
-        $this->sessionId = $sessionId;
     }
 
     public function userId(): ?int
