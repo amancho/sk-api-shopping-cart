@@ -4,6 +4,7 @@ namespace App\Infrastructure\Cart\Persistence\Doctrine\Repository;
 
 use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
+use App\Domain\Cart\ValueObject\CartId;
 use App\Domain\Cart\ValueObject\CartItemId;
 use App\Domain\Shared\Exception\InvalidUuid;
 use App\Infrastructure\Cart\Persistence\Doctrine\Entity\DoctrineCart;
@@ -47,6 +48,18 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
         return DoctrineCartItemMapper::toDomain($cartItem);
     }
 
+    public function findByCartIdAndProductId(CartId $cartId, int $productId): ?CartItem
+    {
+        $repository = $this->em->getRepository(DoctrineCartItem::class);
+        $cartItem = $repository->findOneBy(['cart' => $cartId->value(), 'productId' => $productId]);
+
+        if  ($cartItem === null) {
+            return null;
+        }
+
+        return DoctrineCartItemMapper::toDomain($cartItem);
+    }
+
     /**
      * @throws InvalidUuid
      * @throws ORMException
@@ -61,6 +74,7 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
         $doctrineCartItem = DoctrineCartItemMapper::fromDomain($cartItem, $doctrineCart);
         $this->em->persist($doctrineCartItem);
         $this->em->flush();
+        $this->em->refresh($doctrineCartItem);
 
         return DoctrineCartItemMapper::toDomain($doctrineCartItem);
     }

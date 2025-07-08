@@ -55,9 +55,9 @@ readonly class CartItem
      * @throws InvalidUuid
      */
     public static function create(
-        int $cartId,
-        int $price,
-        int $quantity,
+        CartId $cartId,
+        CartItemPrice $price,
+        CartItemQuantity $quantity,
         ?int $productId,
         ?string $name = null,
         ?string $color = null,
@@ -67,9 +67,9 @@ readonly class CartItem
         return new CartItem(
             id: CartItemId::fromInt(0),
             publicId: CartItemPublicId::create(),
-            cartId: CartId::fromInt($cartId),
-            price: CartItemPrice::fromInt($price),
-            quantity: CartItemQuantity::fromInt($quantity),
+            cartId: $cartId,
+            price: $price,
+            quantity: $quantity,
             productId: $productId,
             name: $name,
             color: $color,

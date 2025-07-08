@@ -21,7 +21,8 @@ final class Version20250708084016 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE cart_items (
-            id INT NOT NULL, public_id CHAR(36) NOT NULL,
+            id INT AUTO_INCREMENT NOT NULL,
+            public_id CHAR(36) NOT NULL,
             product_id INT DEFAULT NULL,
             price INT NOT NULL,
             quantity INT NOT NULL,

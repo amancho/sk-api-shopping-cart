@@ -51,20 +51,28 @@ API to manage shopping cart actions and checkout process
 ├── src
 │   ├── Application
 │   │   ├── Cart
+│   │   │   ├── Command
+│   │   │   └── Query
 |   │   ├── Order
 │   │   └── Product
 │   ├── Domain
 │   │   ├── Cart
+│   │   │   ├── Entity
+│   │   │   ├── Events
+│   │   │   ├── Exception
+│   │   │   ├── Repository
+│   │   │   └── ValueObject
 |   │   ├── Order
-│   │   └── Product
+│   │   ├── Product
+|   │   └── Shared
 │   ├── Infrastructure
-│      │   ├── Cart
-|   │   ├── Order
-│   │   └── Product
-│   ├── Shared
-│   │   └── Infrastructure
-│   │   │   ├── Persistence
+│   │   ├── Cart
+│   │   │   ├── Persitence
 │   │   │   └── Symfony
+|   │   ├── Order
+│   │   ├── Product
+|   │   └── Shared
+│   │   │   └── Persistence
 │   └── Kernel.php
 ├── docker-compose.yml
 ├── Makefile
@@ -108,12 +116,16 @@ make up
 Functional open API tool
 http://172.33.0.4:8080/api-doc.html
 
-## Example to 
-- Create cart (POST) 
+## Example Usage
+- Create a cart (POST). Copy the UUID from the response for later use:
 ```
-http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23
+http://172.33.0.4:8080/carts
 ```
-- Add item to cart (PUT)
+- Add item to cart (POST)
+```
+http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23/item
+```
+- Udpate item cart (PUT)
 ```
 http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23/item/62bf234f-984a-4df8-8f03-e0ea81bddc46
 ```

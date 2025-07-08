@@ -5,7 +5,7 @@ namespace App\Application\Cart\Query;
 final readonly class GetCartByPublicId
 {
     public function __construct(
-        public readonly string $publicId
+        public string $publicId
     ) {}
 
     public function publicId(): string

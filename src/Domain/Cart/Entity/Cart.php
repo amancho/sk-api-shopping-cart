@@ -108,6 +108,11 @@ class Cart
         return $this->status;
     }
 
+    public function isActive(): bool
+    {
+        return in_array($this->status, [CartStatus::PENDING, CartStatus::NEW]);
+    }
+
     public function shippingAddress(): ?CartShippingAddress
     {
         return $this->shippingAddress;
@@ -158,7 +163,7 @@ class Cart
      */
     public function checkout(string $checkoutId): void
     {
-        if (!in_array($this->status(), [CartStatus::PENDING, CartStatus::NEW])) {
+        if (!$this->isActive()) {
             throw CartInvalidStatusException::create($this->status());
         }
 
