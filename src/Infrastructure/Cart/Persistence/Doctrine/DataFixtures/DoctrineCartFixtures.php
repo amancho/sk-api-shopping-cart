@@ -20,6 +20,7 @@ class DoctrineCartFixtures extends Fixture
 
         $manager->persist($cart);
         $manager->flush();
+        $manager->refresh($cart);
 
         $cartItem = DoctrineCartItemMapper::fromDomain(
             CartItem::create(

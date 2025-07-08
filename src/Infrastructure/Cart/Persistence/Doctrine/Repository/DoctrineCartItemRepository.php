@@ -74,6 +74,7 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
         $doctrineCartItem = DoctrineCartItemMapper::fromDomain($cartItem, $doctrineCart);
         $this->em->persist($doctrineCartItem);
         $this->em->flush();
+        $this->em->refresh($doctrineCartItem);
 
         return DoctrineCartItemMapper::toDomain($doctrineCartItem);
     }

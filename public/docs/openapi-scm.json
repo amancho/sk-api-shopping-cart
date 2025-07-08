@@ -219,7 +219,7 @@
                 "tags": [
                     "Cart"
                 ],
-                "summary": "Add item to create",
+                "summary": "Add item to cart",
                 "description": "Create cart item associated with cart",
                 "parameters": [
                     {
@@ -277,8 +277,27 @@
                     }
                 },
                 "responses": {
-                    "204": {
-                        "description": "Cart item added successfully"
+                    "201": {
+                        "description": "Cart item added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Cart item public uuid",
+                                            "example": "2d8e6960-7b3c-4aee-b90c-54cbc377938c"
+                                        },
+                                        "cart_id": {
+                                            "type": "string",
+                                            "description": "Cart public uuid",
+                                            "example": "b11ca198-5ceb-45c1-a6c9-d0bff815d6c2"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not found cart",

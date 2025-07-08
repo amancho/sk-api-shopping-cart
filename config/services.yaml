@@ -22,6 +22,9 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    App\Application\Cart\Command\AddItemToCartCommandHandler:
+        tags: [ 'messenger.message_handler' ]
+
     App\Application\Cart\Command\CreateCartCommandHandler:
         tags: [ 'messenger.message_handler' ]
 

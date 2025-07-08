@@ -106,6 +106,6 @@ class AddItemToCartCommandHandlerTest extends TestCase
 
         $result = $this->handler->__invoke($command);
 
-        $this->assertEquals($cartItem->id(), $result);
+        $this->assertEquals($cartItem->publicId()->value(), $result);
     }
 }

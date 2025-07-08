@@ -8,8 +8,6 @@ use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Exception\CartProductDuplicatedException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
-use App\Domain\Cart\ValueObject\CartItemId;
-use App\Domain\Cart\ValueObject\CartStatus;
 use App\Domain\Shared\Exception\InvalidUuid;
 
 readonly class AddItemToCartCommandHandler
@@ -27,7 +25,7 @@ readonly class AddItemToCartCommandHandler
      * @throws CartProductDuplicatedException
      * @throws CartInvalidStatusException
      */
-    public function __invoke(AddItemToCartCommand $command): CartItemId
+    public function __invoke(AddItemToCartCommand $command): string
     {
         $cart = $this->cartRepository->findByPublicId($command->cartPublicId()->value());
         if ($cart === null) {
@@ -59,6 +57,6 @@ readonly class AddItemToCartCommandHandler
 
         $cartItemCreated = $this->cartItemRepository->save($cartItem);
 
-        return $cartItemCreated->id();
+        return $cartItemCreated->publicId()->value();
     }
 }
