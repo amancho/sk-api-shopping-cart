@@ -9,7 +9,6 @@ use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartItemNotFoundException;
 use App\Domain\Cart\Exception\CartNotFoundException;
-use App\Domain\Cart\Exception\CartValidationException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
 use App\Domain\Cart\ValueObject\CartId;
@@ -17,6 +16,7 @@ use App\Domain\Cart\ValueObject\CartItemPrice;
 use App\Domain\Cart\ValueObject\CartItemQuantity;
 use App\Domain\Cart\ValueObject\CartStatus;
 use App\Domain\Shared\ValueObject\Uuid;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 class RemoveItemFromCartCommandHandlerTest extends TestCase
@@ -120,7 +120,7 @@ class RemoveItemFromCartCommandHandlerTest extends TestCase
             ->with($cartItem->publicId()->value())
             ->willReturn($cartItem);
 
-        $this->expectException(CartValidationException::class);
+        $this->expectException(LogicException::class);
 
         $this->handler->__invoke($command);
     }

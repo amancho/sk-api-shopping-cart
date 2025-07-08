@@ -5,9 +5,9 @@ namespace App\Application\Cart\Command;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartItemNotFoundException;
 use App\Domain\Cart\Exception\CartNotFoundException;
-use App\Domain\Cart\Exception\CartValidationException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
+use LogicException;
 
 readonly class RemoveItemFromCartCommandHandler
 {
@@ -22,7 +22,6 @@ readonly class RemoveItemFromCartCommandHandler
      * @throws CartNotFoundException
      * @throws CartInvalidStatusException
      * @throws CartItemNotFoundException
-     * @throws CartValidationException
      */
     public function __invoke(RemoveItemFromCartCommand $command): void
     {
@@ -43,8 +42,8 @@ readonly class RemoveItemFromCartCommandHandler
             throw CartItemNotFoundException::create($cartItemPublicId);
         }
 
-        if ($cart->id() !== $cartItem->cartId()) {
-            throw CartValidationException::create(['The cart item does not belong to the cart.']);
+        if (!$cart->id()->equals($cartItem->cartId()->value())) {
+            throw new LogicException('The cart item does not belong to the cart.');
         }
 
         $this->cartItemRepository->delete($cartItem);

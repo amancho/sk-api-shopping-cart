@@ -31,6 +31,9 @@ services:
     App\Application\Cart\Command\CheckoutCartCommandHandler:
         tags: [ 'messenger.message_handler' ]
 
+    App\Application\Cart\Command\RemoveItemFromCartCommandHandler:
+        tags: [ 'messenger.message_handler' ]
+
     App\Infrastructure\Cart\Symfony\Controller\:
         resource: '../src/Infrastructure/Cart/Symfony/Controller/'
         tags: ['controller.service_arguments']

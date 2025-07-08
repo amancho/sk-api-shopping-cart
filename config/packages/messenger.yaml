@@ -14,5 +14,6 @@ framework:
 
             'App\Application\Cart\Command\AddItemToCartCommand': sync
             'App\Application\Cart\Command\CreateCartCommand': sync
+            'App\Application\Cart\Command\RemoveItemFromCartCommand': sync
 
             'App\Domain\Cart\Events\CartCheckoutEvent': async
