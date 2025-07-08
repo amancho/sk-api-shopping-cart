@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Cart\Persistence\Doctrine\Repository;
 
 use App\Domain\Cart\Entity\CartItem;
+use App\Domain\Cart\Exception\CartItemNotFoundException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\ValueObject\CartId;
 use App\Domain\Cart\ValueObject\CartItemId;
@@ -39,7 +40,7 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
     public function findByPublicId(string $publicId): ?CartItem
     {
         $repository = $this->em->getRepository(DoctrineCartItem::class);
-        $cartItem = $repository->findOneBy(['publicId' => $publicId]);
+        $cartItem = $repository->findOneBy(['public_id' => $publicId]);
 
         if  ($cartItem === null) {
             return null;
@@ -73,6 +74,32 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
 
         $doctrineCartItem = DoctrineCartItemMapper::fromDomain($cartItem, $doctrineCart);
         $this->em->persist($doctrineCartItem);
+        $this->em->flush();
+        $this->em->refresh($doctrineCartItem);
+
+        return DoctrineCartItemMapper::toDomain($doctrineCartItem);
+    }
+
+    /**
+     * @throws InvalidUuid
+     * @throws ORMException
+     * @throws CartItemNotFoundException
+     */
+    public function update(CartItem $cartItem): ?CartItem
+    {
+        $doctrineCartItem = $this->em->find(DoctrineCartItem::class, $cartItem->id()->value());
+
+        if ($doctrineCartItem === null) {
+            throw CartItemNotFoundException::createFromId($cartItem->id());
+        }
+
+        $doctrineCartItem->setPrice($cartItem->price()->value());
+        $doctrineCartItem->setQuantity($cartItem->quantity()->value());
+        $doctrineCartItem->setProductId($cartItem->productId());
+        $doctrineCartItem->setName($cartItem->name());
+        $doctrineCartItem->setColor($cartItem->color());
+        $doctrineCartItem->setSize($cartItem->size());
+
         $this->em->flush();
         $this->em->refresh($doctrineCartItem);
 

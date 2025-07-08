@@ -12,8 +12,8 @@ class CartItemNotFoundException extends Exception
         return new CartItemNotFoundException(sprintf('Cart item with public id [%s] not found', $publicId));
     }
 
-    public static function createFromId(CartItemId $cartId): CartItemNotFoundException
+    public static function createFromId(CartItemId $cartItemId): CartItemNotFoundException
     {
-        return new CartItemNotFoundException(sprintf('Cart item with id [%u] not found', $cartId->value()));
+        return new CartItemNotFoundException(sprintf('Cart item with id [%u] not found', $cartItemId->value()));
     }
 }
