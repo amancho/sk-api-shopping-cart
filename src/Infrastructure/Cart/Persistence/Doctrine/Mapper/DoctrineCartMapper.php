@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Cart\Persistence\Doctrine\Mapper;
 
 use App\Domain\Cart\Entity\Cart;
+use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Entity\CartShippingAddress;
 use App\Domain\Cart\ValueObject\CartCode;
 use App\Domain\Cart\ValueObject\CartId;
@@ -63,7 +64,7 @@ class DoctrineCartMapper
             country: $doctrineCart->getShippingCountry(),
         );
 
-        return new Cart(
+        $cart = new Cart(
             id: CartId::fromInt($doctrineCart->getId()),
             publicId: CartPublicId::fromUuid($doctrineCart->getPublicId()),
             code: CartCode::fromCode($doctrineCart->getCode()),
@@ -72,5 +73,23 @@ class DoctrineCartMapper
             shippingEmail: $doctrineCart->getShippingEmail() ? CartShippingEmail::fromString($doctrineCart->getShippingEmail()) : null,
             shippingPhone: $doctrineCart->getShippingPhone() ? CartShippingPhone::fromString($doctrineCart->getShippingPhone()) : null,
         );
+
+        $cart->addItems(self::mapItems($doctrineCart));
+
+        return $cart;
+    }
+
+    /**
+     * @return CartItem[]
+     * @throws InvalidUuid
+     */
+    private static function mapItems(DoctrineCart $doctrineCart): array
+    {
+        $items = [];
+        foreach ($doctrineCart->getItems() as $doctrineCartItem) {
+            $items[] = DoctrineCartItemMapper::toDomain($doctrineCartItem);
+        }
+
+        return $items;
     }
 }

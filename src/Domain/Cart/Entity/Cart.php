@@ -13,19 +13,21 @@ use App\Domain\Shared\Exception\InvalidUuid;
 
 class Cart
 {
+    private array $items = [];
+
     public function __construct(
-        private readonly CartId $id,
-        private readonly CartPublicId $publicId,
-        private readonly CartCode $code,
-        private CartStatus $status,
-        private ?CartShippingAddress $shippingAddress = null,
-        private ?CartShippingEmail $shippingEmail = null,
-        private ?CartShippingPhone $shippingPhone = null,
-        private ?string $checkoutId = null,
-        private ?string $sessionId = null,
-        private ?int $userId = null,
-        private ?int $orderId = null,
-        private ?array $metadata = null,
+        private readonly CartId               $id,
+        private readonly CartPublicId         $publicId,
+        private readonly CartCode             $code,
+        private CartStatus                    $status,
+        private readonly ?CartShippingAddress $shippingAddress = null,
+        private readonly ?CartShippingEmail   $shippingEmail = null,
+        private readonly ?CartShippingPhone   $shippingPhone = null,
+        private ?string                       $checkoutId = null,
+        private readonly ?string              $sessionId = null,
+        private readonly ?int                 $userId = null,
+        private readonly ?int                 $orderId = null,
+        private readonly ?array               $metadata = null,
     ) {}
 
     /**
@@ -162,5 +164,23 @@ class Cart
 
         $this->checkoutId = $checkoutId;
         $this->complete();
+    }
+
+    public function addItem(CartItem $cartItem): void
+    {
+        $this->items[] = $cartItem;
+    }
+
+    public function addItems(array $items): void
+    {
+        $this->items = array_merge($this->items, $items);
+    }
+
+    /**
+     * @return array<CartItem>|null
+     */
+    public function items(): ?array
+    {
+        return $this->items;
     }
 }

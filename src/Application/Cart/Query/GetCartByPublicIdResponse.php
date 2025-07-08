@@ -3,6 +3,7 @@
 namespace App\Application\Cart\Query;
 
 use App\Domain\Cart\Entity\Cart;
+use App\Domain\Cart\Entity\CartItem;
 
 readonly class GetCartByPublicIdResponse
 {
@@ -20,6 +21,16 @@ readonly class GetCartByPublicIdResponse
             'shipping_address'  => $this->cart->shippingAddress()?->toArray(),
             'email'             => $this->cart->shippingEmail()?->value(),
             'phone'             => $this->cart->shippingPhone()?->value(),
+            'items'             => $this->getCartItems($this->cart->items())
         ];
+    }
+
+    private function getCartItems(?array $items): array
+    {
+        if ($items === null) {
+            return [];
+        }
+
+        return array_map(fn(CartItem $item) => $item->toArray(), $items);
     }
 }
