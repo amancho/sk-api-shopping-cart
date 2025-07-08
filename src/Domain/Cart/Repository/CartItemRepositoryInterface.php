@@ -15,4 +15,6 @@ interface CartItemRepositoryInterface
     public function findByCartIdAndProductId(CartId $cartId, int $productId): ?CartItem;
 
     public function save(CartItem $cartItem): ?CartItem;
+
+    public function delete(CartItem $cartItem): void;
 }
