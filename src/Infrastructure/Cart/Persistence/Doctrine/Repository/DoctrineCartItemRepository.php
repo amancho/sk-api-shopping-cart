@@ -4,6 +4,7 @@ namespace App\Infrastructure\Cart\Persistence\Doctrine\Repository;
 
 use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
+use App\Domain\Cart\ValueObject\CartId;
 use App\Domain\Cart\ValueObject\CartItemId;
 use App\Domain\Shared\Exception\InvalidUuid;
 use App\Infrastructure\Cart\Persistence\Doctrine\Entity\DoctrineCart;
@@ -39,6 +40,18 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
     {
         $repository = $this->em->getRepository(DoctrineCartItem::class);
         $cartItem = $repository->findOneBy(['publicId' => $publicId]);
+
+        if  ($cartItem === null) {
+            return null;
+        }
+
+        return DoctrineCartItemMapper::toDomain($cartItem);
+    }
+
+    public function findByCartIdAndProductId(CartId $cartId, int $productId): ?CartItem
+    {
+        $repository = $this->em->getRepository(DoctrineCartItem::class);
+        $cartItem = $repository->findOneBy(['cart' => $cartId->value(), 'productId' => $productId]);
 
         if  ($cartItem === null) {
             return null;

@@ -214,6 +214,111 @@
                 }
             }
         },
+        "/carts/{id}/items": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Add item to create",
+                "description": "Create cart item associated with cart",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart public uuid",
+                        "required": true,
+                        "example": "501c4b5b-00f9-49ef-a649-969caf8e95c0",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "price": {
+                                        "type": "number",
+                                        "description": "Price in €",
+                                        "example": 7.5
+                                    },
+                                    "quantity": {
+                                        "type": "number",
+                                        "description": "Number of items > 0",
+                                        "example": 5
+                                    },
+                                    "product_id": {
+                                        "type": "integer",
+                                        "description": "Internal product ID",
+                                        "example": 66
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Product description",
+                                        "example": "Sunglasses"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "description": "Color of the product",
+                                        "example": "Black"
+                                    },
+                                    "size": {
+                                        "type": "string",
+                                        "description": "Size description",
+                                        "example": "XS"
+                                    }
+                                },
+                                "required": ["price", "quantity", "product_id"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Cart item added successfully"
+                    },
+                    "404": {
+                        "description": "Not found cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Cart with id # not found"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unknown error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Unknown error"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/carts/{id}/checkout": {
             "put": {
                 "tags": [

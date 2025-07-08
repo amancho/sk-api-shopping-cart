@@ -27,7 +27,7 @@ class AddItemToCartCommandHandlerTest extends TestCase
 
         $this->handler = new AddItemToCartCommandHandler(
             $this->cartRepository,
-            $this->cartItemrepository
+            $this->cartItemRepository
         );
     }
 
@@ -81,6 +81,13 @@ class AddItemToCartCommandHandlerTest extends TestCase
         $cart       = Cart::create();
         $productId  = 55;
 
+        $cartItem   = CartItem::create(
+            $cart->id(),
+            CartItemPrice::fromFloat(10.5),
+            CartItemQuantity::fromInt(1),
+            $productId
+        );
+
         $command = new AddItemToCartCommand($cart->publicId()->value(), 10.5, 1, $productId);
 
         $this->cartRepository->expects($this->once())
@@ -93,6 +100,12 @@ class AddItemToCartCommandHandlerTest extends TestCase
             ->with($cart->id(), $productId)
             ->willReturn(null);
 
-        $this->handler->__invoke($command);
+        $this->cartItemRepository->expects($this->once())
+            ->method('save')
+            ->willReturn($cartItem);
+
+        $result = $this->handler->__invoke($command);
+
+        $this->assertEquals($cartItem->id(), $result);
     }
 }

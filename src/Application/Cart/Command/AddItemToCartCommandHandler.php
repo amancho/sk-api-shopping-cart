@@ -3,15 +3,17 @@
 namespace App\Application\Cart\Command;
 
 use App\Domain\Cart\Entity\CartItem;
+use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Exception\CartProductDuplicatedException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
+use App\Domain\Cart\ValueObject\CartItemId;
+use App\Domain\Cart\ValueObject\CartStatus;
 use App\Domain\Shared\Exception\InvalidUuid;
 
 readonly class AddItemToCartCommandHandler
 {
-
     public function __construct(
         private CartRepositoryInterface     $cartRepository,
         private CartItemRepositoryInterface $cartItemRepository
@@ -23,12 +25,17 @@ readonly class AddItemToCartCommandHandler
      * @throws CartNotFoundException
      * @throws InvalidUuid
      * @throws CartProductDuplicatedException
+     * @throws CartInvalidStatusException
      */
-    public function __invoke(AddItemToCartCommand $command): void
+    public function __invoke(AddItemToCartCommand $command): CartItemId
     {
         $cart = $this->cartRepository->findByPublicId($command->cartPublicId()->value());
         if ($cart === null) {
             throw CartNotFoundException::create($command->cartPublicId()->value());
+        }
+
+        if (!$cart->isActive()) {
+            throw CartInvalidStatusException::create($cart->status());
         }
 
         $cartItem = $this->cartItemRepository->findByCartIdAndProductId(
@@ -50,6 +57,8 @@ readonly class AddItemToCartCommandHandler
             size: $command->size()
         );
 
-        $this->cartItemRepository->save($cartItem);
+        $cartItemCreated = $this->cartItemRepository->save($cartItem);
+
+        return $cartItemCreated->id();
     }
 }
