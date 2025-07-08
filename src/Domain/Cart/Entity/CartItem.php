@@ -51,6 +51,32 @@ readonly class CartItem
         );
     }
 
+    /**
+     * @throws InvalidUuid
+     */
+    public static function create(
+        int $cartId,
+        int $price,
+        int $quantity,
+        ?int $productId,
+        ?string $name = null,
+        ?string $color = null,
+        ?string $size = null
+    ): CartItem
+    {
+        return new CartItem(
+            id: CartItemId::fromInt(0),
+            publicId: CartItemPublicId::create(),
+            cartId: CartId::fromInt($cartId),
+            cartItemPrice: CartItemPrice::fromInt($price),
+            cartItemQuantity: CartItemQuantity::fromInt($quantity),
+            productId: $productId,
+            name: $name,
+            color: $color,
+            size: $size
+        );
+    }
+
     public function id(): CartItemId
     {
         return $this->id;

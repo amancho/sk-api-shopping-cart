@@ -5,8 +5,6 @@ namespace App\Infrastructure\Cart\Persistence\Doctrine\Entity;
 use App\Infrastructure\Shared\Persistence\Doctrine\Entity\AbstractTimestampedEntity;
 use Doctrine\ORM\Mapping as ORM;
 
-
-
 #[ORM\Entity]
 #[ORM\Table(name: 'carts', indexes: [new ORM\Index(name: 'public_id_idx', columns: ['publicId'])])]
 #[ORM\HasLifecycleCallbacks]
@@ -17,7 +15,7 @@ class DoctrineCart extends AbstractTimestampedEntity
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 36)]
+    #[ORM\Column(name: "public_id", type: 'guid', unique: true)]
     private string $publicId;
 
     #[ORM\Column(type: 'string', length: 30)]
