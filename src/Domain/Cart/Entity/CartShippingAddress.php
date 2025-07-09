@@ -2,8 +2,6 @@
 
 namespace App\Domain\Cart\Entity;
 
-use App\Domain\Cart\ValueObject\CartShippingEmail;
-
 readonly class CartShippingAddress
 {
     public function __construct(
@@ -15,7 +13,7 @@ readonly class CartShippingAddress
         private ?string $country = null
     ) {}
 
-    public static function fromValues(
+    public static function build(
          ?string $name = null,
          ?string $address = null,
          ?string $city = null,

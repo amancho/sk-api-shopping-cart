@@ -55,7 +55,7 @@ class DoctrineCartMapper
      */
     public static function toDomain(DoctrineCart $doctrineCart): Cart
     {
-        $shippingAddress = CartShippingAddress::fromValues(
+        $shippingAddress = CartShippingAddress::build(
             name: $doctrineCart->getShippingName(),
             address: $doctrineCart->getShippingName(),
             city: $doctrineCart->getShippingCity(),
@@ -64,10 +64,10 @@ class DoctrineCartMapper
             country: $doctrineCart->getShippingCountry(),
         );
 
-        $cart = new Cart(
-            id: CartId::fromInt($doctrineCart->getId()),
-            publicId: CartPublicId::fromUuid($doctrineCart->getPublicId()),
-            code: CartCode::fromCode($doctrineCart->getCode()),
+        $cart = Cart::build(
+            id: $doctrineCart->getId(),
+            publicId: $doctrineCart->getPublicId(),
+            code: $doctrineCart->getCode(),
             status: CartStatus::tryFrom($doctrineCart->getStatus()),
             shippingAddress: $shippingAddress,
             shippingEmail: $doctrineCart->getShippingEmail() ? CartShippingEmail::fromString($doctrineCart->getShippingEmail()) : null,

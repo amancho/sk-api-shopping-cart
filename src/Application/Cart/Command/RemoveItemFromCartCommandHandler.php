@@ -2,6 +2,7 @@
 
 namespace App\Application\Cart\Command;
 
+use App\Application\Cart\Shared\CartValidator;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartItemNotFoundException;
 use App\Domain\Cart\Exception\CartNotFoundException;
@@ -11,6 +12,8 @@ use LogicException;
 
 readonly class RemoveItemFromCartCommandHandler
 {
+    use CartValidator;
+
     public function __construct(
         private CartRepositoryInterface     $cartRepository,
         private CartItemRepositoryInterface $cartItemRepository
@@ -25,15 +28,7 @@ readonly class RemoveItemFromCartCommandHandler
      */
     public function __invoke(RemoveItemFromCartCommand $command): void
     {
-        $cartPublicId = $command->cartPublicId()->value();
-        $cart = $this->cartRepository->findByPublicId($cartPublicId);
-        if ($cart === null) {
-            throw CartNotFoundException::create($cartPublicId);
-        }
-
-        if (!$cart->isActive()) {
-            throw CartInvalidStatusException::create($cart->status());
-        }
+        $cart = $this->getActiveCart($command->cartPublicId());
 
         $cartItemPublicId = $command->cartItemPublicId()->value();
         $cartItem = $this->cartItemRepository->findByPublicId($cartItemPublicId);

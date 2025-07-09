@@ -28,7 +28,7 @@ final class CartShippingAddressTest extends TestCase
 
     public function testFromValuesCreatesInstanceCorrectly(): void
     {
-        $address = CartShippingAddress::fromValues(
+        $address = CartShippingAddress::build(
             name: 'Jane Smith',
             address: '456 Elm St',
             city: 'Shelbyville',
@@ -37,7 +37,6 @@ final class CartShippingAddressTest extends TestCase
             country: 'USA'
         );
 
-        $this->assertInstanceOf(CartShippingAddress::class, $address);
         $this->assertSame('Jane Smith', $address->name());
         $this->assertSame('456 Elm St', $address->address());
         $this->assertSame('Shelbyville', $address->city());

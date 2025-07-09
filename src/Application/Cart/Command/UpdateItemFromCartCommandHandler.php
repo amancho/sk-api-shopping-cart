@@ -2,6 +2,7 @@
 
 namespace App\Application\Cart\Command;
 
+use App\Application\Cart\Shared\CartValidator;
 use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartItemNotFoundException;
@@ -9,11 +10,12 @@ use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
 use App\Domain\Cart\ValueObject\CartItemPublicId;
-use App\Domain\Cart\ValueObject\CartPublicId;
 use App\Domain\Shared\Exception\InvalidUuid;
 
 readonly class UpdateItemFromCartCommandHandler
 {
+    use CartValidator;
+
     public function __construct(
         private CartRepositoryInterface     $cartRepository,
         private CartItemRepositoryInterface $cartItemRepository
@@ -29,29 +31,13 @@ readonly class UpdateItemFromCartCommandHandler
      */
     public function __invoke(UpdateItemFromCartCommand $command): void
     {
-        $this->checkCart($command->cartPublicId());
+        $this->getActiveCart($command->cartPublicId());
+
         $cartItem = $this->getCartItem($command->cartItemPublicId());
         $updatedCartItem = $this->buildUpdatedCartItem($cartItem, $command);
 
         if ($cartItem->isEqualTo($updatedCartItem) === false) {
             $this->cartItemRepository->update($updatedCartItem);
-        }
-    }
-
-    /**
-     * @throws CartNotFoundException
-     * @throws CartInvalidStatusException
-     */
-    private function checkCart(CartPublicId $cartPublicId): void
-    {
-        $cart =$this->cartRepository->findByPublicId($cartPublicId->value());
-
-        if ($cart === null) {
-            throw CartNotFoundException::create($cartPublicId->value());
-        }
-
-        if (!$cart->isActive()) {
-            throw CartInvalidStatusException::create($cart->status());
         }
     }
 
