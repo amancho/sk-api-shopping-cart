@@ -32,8 +32,8 @@ final class Version20250708084016 extends AbstractMigration
             cart_id INT NOT NULL,
             created_at DATETIME NOT NULL,
             updated_at DATETIME NOT NULL,
-            UNIQUE INDEX uniq_cart_item (public_id),
-            INDEX idx_cart_item_cart_id (cart_id),
+            UNIQUE INDEX cart_items_public_id_idx (public_id),
+            INDEX cart_items_id_idx (cart_id),
             PRIMARY KEY(id))
             DEFAULT CHARACTER SET utf8mb4'
         );

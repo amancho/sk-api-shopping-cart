@@ -204,6 +204,6 @@ class Cart
             $total += $item->total();
         }
 
-        return $total * 100;
+        return intval($total * 100);
     }
 }

@@ -18,6 +18,7 @@ use App\Domain\Cart\ValueObject\CartItemQuantity;
 use App\Domain\Cart\ValueObject\CartStatus;
 use App\Domain\Order\Repository\OrderRepositoryInterface;
 use App\Domain\Shared\ValueObject\Uuid;
+use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
@@ -32,12 +33,14 @@ class CheckoutCartCommandHandlerTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->entityManager        = $this->createMock(EntityManager::class);
         $this->cartCheckoutService  = $this->createMock(CartCheckoutService::class);
         $this->cartRepository       = $this->createMock(CartRepositoryInterface::class);
         $this->orderRepository      = $this->createMock(OrderRepositoryInterface::class);
         $this->bus                  = $this->createMock(MessageBusInterface::class);
 
         $this->handler = new CheckoutCartCommandHandler(
+            $this->entityManager,
             $this->cartCheckoutService,
             $this->cartRepository,
             $this->orderRepository,

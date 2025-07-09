@@ -65,7 +65,7 @@ readonly class OrderShippingAddress
     {
         return new self(
             name: $data['name'] ?? null,
-            address: $data['address'] ?? false,
+            address: $data['address'] ?? null,
             city: $data['city'] ?? null,
             postalCode: $data['postal_code'] ?? null,
             province: $data['province'] ?? null,

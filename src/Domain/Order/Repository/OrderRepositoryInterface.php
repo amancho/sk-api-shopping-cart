@@ -6,5 +6,5 @@ use App\Domain\Order\Entity\Order;
 
 interface OrderRepositoryInterface
 {
-    public function save(Order $cart): ?Order;
+    public function save(Order $order): ?Order;
 }

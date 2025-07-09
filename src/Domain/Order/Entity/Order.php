@@ -14,13 +14,13 @@ class Order
     private array $items = [];
 
     public function __construct(
-        private readonly OrderId                $id,
-        private readonly OrderCode              $code,
-        private OrderStatus                     $status,
-        private readonly OrderTotalAmount       $total_amount,
-        private readonly ?OrderShippingAddress  $shippingAddress = null,
-        private readonly ?OrderMetaData         $metadata = null,
-        private readonly ?int                   $userId = null,
+        private readonly OrderId               $id,
+        private readonly OrderCode             $code,
+        private readonly OrderStatus           $status,
+        private readonly OrderTotalAmount      $total_amount,
+        private readonly ?OrderShippingAddress $shippingAddress = null,
+        private readonly ?OrderMetaData        $metadata = null,
+        private readonly ?int                  $userId = null,
     ) {}
 
     public static function build(
@@ -38,22 +38,24 @@ class Order
             code: OrderCode::fromCode($code),
             status: OrderStatus::from($status),
             total_amount: OrderTotalAmount::fromInt($total_amount),
-            shippingAddress: OrderShippingAddress::fromArray($shippingAddress),
-            metadata: OrderMetaData::fromArray($metadata),
+            shippingAddress: $shippingAddress ? OrderShippingAddress::fromArray($shippingAddress) : null,
+            metadata: $metadata ? OrderMetaData::fromArray($metadata) : null,
             userId: $userId
         );
     }
 
     public static function create(
         int $total_amount,
-        array $metadata
+        array $metadata,
+        ?array $shippingAddress,
     ): Order {
         return new Order(
             id: OrderId::fromInt(0),
             code: OrderCode::create(),
             status: OrderStatus::NEW,
             total_amount: OrderTotalAmount::fromInt($total_amount),
-            metadata: OrderMetaData::fromArray($metadata)
+            shippingAddress: $shippingAddress ? OrderShippingAddress::fromArray($shippingAddress) : null,
+            metadata: $metadata ? OrderMetaData::fromArray($metadata) : null
         );
     }
 

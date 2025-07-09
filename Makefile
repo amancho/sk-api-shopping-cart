@@ -27,6 +27,9 @@ init-db:
 migrations:
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console doctrine:migrations:migrate
 
+doctrine-diff:
+	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console doctrine:migrations:diff
+
 ssh:
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} bash
 

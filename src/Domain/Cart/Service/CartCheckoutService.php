@@ -20,9 +20,10 @@ class CartCheckoutService
         return Order::create(
             total_amount: $cart->totalAmount(),
             metadata: [
-                'cart_id' => $cart->id(),
-                'code' => $cart->code(),
-            ]
+                'cart_id' => $cart->id()->value(),
+                'code' => $cart->code()->value(),
+            ],
+            shippingAddress: $cart->shippingAddress()->toArray()
         );
     }
 }
