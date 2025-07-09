@@ -1,23 +1,48 @@
 <?php declare(strict_types=1);
 
-namespace App\Tests\Domain\Cart\Entity;
+namespace App\Tests\Domain\Order\Entity;
 
-use App\Domain\Cart\Entity\Cart;
-use App\Domain\Cart\ValueObject\CartStatus;
-use App\Domain\Shared\Exception\InvalidUuid;
+use App\Domain\Order\Entity\Order;
+use App\Domain\Order\ValueObject\OrderStatus;
 use PHPUnit\Framework\TestCase;
+use ValueError;
 
 class OrderTest extends TestCase
 {
-    public function testItFailsInvalidUuid(): void
+    public function testItOrderCreate(): void
     {
-        $this->expectException(InvalidUuid::class);
+        $metadata = [
+            'cart_id'   => 123,
+            'cart_code' => 'TEST',
+            'notes'     => null
+        ];
 
-        Cart::build(
-            id: 0,
-            publicId: '',
-            code: 'TEST-001',
-            status: CartStatus::NEW
+        $order = Order::create(
+            total_amount: 123456,
+            metadata: $metadata,
+            shippingAddress: [],
+        );
+
+        $this->assertEquals(123456, $order->totalAmount()->value());
+        $this->assertEquals(OrderStatus::NEW, $order->status());
+        $this->assertEquals($metadata, $order->metadata()->toArray());
+        $this->assertNotEmpty($order->id()->value());
+        $this->assertNotEmpty($order->code()->value());
+        $this->assertEmpty($order->items());
+        $this->assertNull($order->userId());
+        $this->assertNull($order->shippingAddress());
+        $this->assertTrue($order->isActive());
+    }
+
+    public function testItFailsIncorrectStatus(): void
+    {
+        $this->expectException(ValueError::class);
+
+        Order::build(
+            id: 123,
+            total_amount: 0,
+            code: 'TEST',
+            status: 'TEST'
         );
     }
 }

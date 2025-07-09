@@ -24,7 +24,7 @@ final readonly class OrderMetaData
     {
         return [
             'cart_id'   => $this->cartId,
-            'card_code' => $this->code,
+            'cart_code' => $this->code,
             'notes'     => $this->notes,
         ];
     }

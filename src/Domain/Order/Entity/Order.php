@@ -79,7 +79,7 @@ class Order
         return $this->total_amount;
     }
 
-    public function metadata(): OrderMetaData
+    public function metadata(): ?OrderMetaData
     {
         return $this->metadata;
     }
