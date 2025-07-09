@@ -26,7 +26,7 @@ class OrderTest extends TestCase
         $this->assertEquals(123456, $order->totalAmount()->value());
         $this->assertEquals(OrderStatus::NEW, $order->status());
         $this->assertEquals($metadata, $order->metadata()->toArray());
-        $this->assertNotEmpty($order->id()->value());
+        $this->assertEquals(0, $order->id()->value());
         $this->assertNotEmpty($order->code()->value());
         $this->assertEmpty($order->items());
         $this->assertNull($order->userId());

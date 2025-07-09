@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Order\Persistence\Doctrine\Entity;
 
-use App\Infrastructure\Cart\Persistence\Doctrine\Entity\DoctrineCartItem;
 use App\Infrastructure\Shared\Persistence\Doctrine\Entity\AbstractTimestampedEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class DoctrineOrder extends AbstractTimestampedEntity
 {
-    private Collection $items;
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
@@ -38,9 +35,12 @@ class DoctrineOrder extends AbstractTimestampedEntity
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $metadata = null;
 
+    #[ORM\OneToMany(targetEntity: DoctrineOrderProduct::class, mappedBy: "order", cascade: ["persist", "remove"], orphanRemoval: true)]
+    private Collection $products;
+
     public function __construct()
     {
-        $this->items = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function setId(int $id): self
@@ -121,9 +121,14 @@ class DoctrineOrder extends AbstractTimestampedEntity
         return $this;
     }
 
-    /** @return Collection<int, DoctrineCartItem> */
-    public function getItems(): Collection
+    public function addProduct(DoctrineOrderProduct $doctrineOrderProduct): void
     {
-        return $this->items;
+        $this->products->add($doctrineOrderProduct);
+    }
+
+    /** @return Collection<int, DoctrineOrderProduct> */
+    public function getProducts(): Collection
+    {
+        return $this->products;
     }
 }

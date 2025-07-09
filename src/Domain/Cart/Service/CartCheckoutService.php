@@ -3,6 +3,7 @@
 namespace App\Domain\Cart\Service;
 
 use App\Domain\Cart\Entity\Cart;
+use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Exception\CartEmptyException;
 use App\Domain\Order\Entity\Order;
 
@@ -17,7 +18,7 @@ class CartCheckoutService
             throw CartEmptyException::create($cart->id());
         }
 
-        return Order::create(
+        $order = Order::create(
             total_amount: $cart->totalAmount(),
             metadata: [
                 'cart_id'   => $cart->id()->value(),
@@ -25,5 +26,12 @@ class CartCheckoutService
             ],
             shippingAddress: $cart->shippingAddress()?->toArray()
         );
+
+        /** @var CartItem $item */
+        foreach ($cart->items() as $item) {
+            $order->addItem($item->toArray());
+        }
+
+        return $order;
     }
 }

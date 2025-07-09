@@ -4,6 +4,7 @@ namespace App\Infrastructure\Order\Persistence\Doctrine\Mapper;
 
 use App\Domain\Order\Entity\Order;
 use App\Infrastructure\Order\Persistence\Doctrine\Entity\DoctrineOrder;
+use App\Infrastructure\Order\Persistence\Doctrine\Entity\DoctrineOrderProduct;
 
 class DoctrineOrderMapper
 {
@@ -22,6 +23,13 @@ class DoctrineOrderMapper
             $doctrineOrder->setShippingAddress(
                 $order->shippingAddress()->toArray()
             );
+        }
+
+        foreach ($order->items() as $itemData) {
+            $doctrineOrderProduct = DoctrineOrderProduct::fromArray($itemData);
+            $doctrineOrderProduct->setOrder($doctrineOrder);
+
+            $doctrineOrder->addProduct($doctrineOrderProduct);
         }
 
         return $doctrineOrder;

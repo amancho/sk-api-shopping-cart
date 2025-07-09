@@ -99,6 +99,11 @@ class Order
         return $this->userId;
     }
 
+    public function addItem(array $item): void
+    {
+        $this->items[] = $item;
+    }
+
     public function items(): ?array
     {
         return $this->items;

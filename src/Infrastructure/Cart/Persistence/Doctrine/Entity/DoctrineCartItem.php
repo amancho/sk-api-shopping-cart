@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'cart_items')]
-#[ORM\Index(name: 'cart_items_public_id_idx', columns: ['publicId'])]
+#[ORM\Index(name: 'cart_items_public_id_idx', columns: ['public_id'])]
 #[ORM\HasLifecycleCallbacks]
 class DoctrineCartItem extends AbstractTimestampedEntity
 {
