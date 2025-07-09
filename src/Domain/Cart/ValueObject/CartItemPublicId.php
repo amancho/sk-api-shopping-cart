@@ -27,4 +27,9 @@ readonly class CartItemPublicId
     {
         return (string) $this->uuid;
     }
+
+    public function equals(CartItemPublicId $other): bool
+    {
+        return $this->value() === $other->value();
+    }
 }

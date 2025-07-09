@@ -42,7 +42,7 @@ readonly class RemoveItemFromCartCommandHandler
             throw CartItemNotFoundException::create($cartItemPublicId);
         }
 
-        if (!$cart->id()->equals($cartItem->cartId()->value())) {
+        if (!$cart->id()->equals($cartItem->cartId())) {
             throw new LogicException('The cart item does not belong to the cart.');
         }
 

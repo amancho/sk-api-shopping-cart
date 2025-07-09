@@ -8,6 +8,8 @@ use App\Domain\Cart\Exception\CartItemNotFoundException;
 use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
+use App\Domain\Cart\ValueObject\CartItemPublicId;
+use App\Domain\Cart\ValueObject\CartPublicId;
 use App\Domain\Shared\Exception\InvalidUuid;
 
 readonly class UpdateItemFromCartCommandHandler
@@ -27,35 +29,61 @@ readonly class UpdateItemFromCartCommandHandler
      */
     public function __invoke(UpdateItemFromCartCommand $command): void
     {
-        $cartPublicId = $command->cartPublicId()->value();
-        $cart = $this->cartRepository->findByPublicId($cartPublicId);
+        $this->checkCart($command->cartPublicId());
+        $cartItem = $this->getCartItem($command->cartItemPublicId());
+        $updatedCartItem = $this->buildUpdatedCartItem($cartItem, $command);
+
+        if ($cartItem->isEqualTo($updatedCartItem) === false) {
+            $this->cartItemRepository->update($updatedCartItem);
+        }
+    }
+
+    /**
+     * @throws CartNotFoundException
+     * @throws CartInvalidStatusException
+     */
+    private function checkCart(CartPublicId $cartPublicId): void
+    {
+        $cart =$this->cartRepository->findByPublicId($cartPublicId->value());
+
         if ($cart === null) {
-            throw CartNotFoundException::create($cartPublicId);
+            throw CartNotFoundException::create($cartPublicId->value());
         }
 
         if (!$cart->isActive()) {
             throw CartInvalidStatusException::create($cart->status());
         }
+    }
 
-        $cartItemPublicId = $command->cartItemPublicId()->value();
-        $cartItem = $this->cartItemRepository->findByPublicId($cartItemPublicId);
+    /**
+     * @throws CartItemNotFoundException
+     */
+    private function getCartItem(CartItemPublicId $cartItemPublicId): CartItem
+    {
+        $cartItem = $this->cartItemRepository->findByPublicId($cartItemPublicId->value());
 
         if ($cartItem === null) {
-            throw CartItemNotFoundException::create($cartItemPublicId);
+            throw CartItemNotFoundException::create($cartItemPublicId->value());
         }
 
-        $cartItem = CartItem::build(
-            id: $cartItem->id()->value(),
-            publicId: $cartItem->publicId()->value(),
-            cartId: $cartItem->cartId()->value(),
-            price: $command->price()->value(),
-            quantity: $command->quantity()->value(),
-            productId:  $command->productId(),
-            name: ($command->name() !== null) ? $command->name() : $cartItem->name(),
-            color: ($command->color() !== null) ? $command->color() : $cartItem->color(),
-            size: ($command->size() !== null) ? $command->size() : $cartItem->size()
-        );
+        return $cartItem;
+    }
 
-        $this->cartItemRepository->update($cartItem);
+    /**
+     * @throws InvalidUuid
+     */
+    private function buildUpdatedCartItem(CartItem $original, UpdateItemFromCartCommand $command): CartItem
+    {
+        return CartItem::build(
+            id: $original->id()->value(),
+            publicId: $original->publicId()->value(),
+            cartId: $original->cartId()->value(),
+            price: $command->price()?->value() ?? $original->price()->value(),
+            quantity: $command->quantity()?->value() ?? $original->quantity()->value(),
+            productId: $command->productId() ?? $original->productId(),
+            name: $command->name() ?? $original->name(),
+            color: $command->color() ?? $original->color(),
+            size: $command->size() ?? $original->size(),
+        );
     }
 }

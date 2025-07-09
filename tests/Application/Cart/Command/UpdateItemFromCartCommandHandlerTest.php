@@ -9,7 +9,6 @@ use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartItemNotFoundException;
 use App\Domain\Cart\Exception\CartNotFoundException;
-use App\Domain\Cart\Exception\CartProductDuplicatedException;
 use App\Domain\Cart\Repository\CartItemRepositoryInterface;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
 use App\Domain\Cart\ValueObject\CartItemPrice;
@@ -38,7 +37,7 @@ class UpdateItemFromCartCommandHandlerTest extends TestCase
     {
         $cardPublicId = Uuid::create()->value();
 
-        $command = new UpdateItemFromCartCommand(
+        $command = UpdateItemFromCartCommand::fromPrimitives(
             cartItemPublicId: Uuid::create()->value(),
             cartPublicId: $cardPublicId,
             price: 10.5,
@@ -65,7 +64,7 @@ class UpdateItemFromCartCommandHandlerTest extends TestCase
             status: CartStatus::COMPLETED,
         );
 
-        $command = new UpdateItemFromCartCommand(
+        $command = UpdateItemFromCartCommand::fromPrimitives(
             cartItemPublicId: Uuid::create()->value(),
             cartPublicId: $cart->publicId()->value(),
             price: 10.5,
@@ -87,7 +86,7 @@ class UpdateItemFromCartCommandHandlerTest extends TestCase
     {
         $cart = Cart::create();
 
-        $command = new UpdateItemFromCartCommand(
+        $command = UpdateItemFromCartCommand::fromPrimitives(
             cartItemPublicId: Uuid::create()->value(),
             cartPublicId: $cart->publicId()->value(),
             price: 10.5,
@@ -109,6 +108,46 @@ class UpdateItemFromCartCommandHandlerTest extends TestCase
         $this->handler->__invoke($command);
     }
 
+    public function testNoUpdateCartItemWithSameValues(): void
+    {
+        $cart       = Cart::create();
+        $productId  = 55;
+
+        $cartItem   = CartItem::create(
+            cartId: $cart->id(),
+            price: CartItemPrice::fromFloat(10.5),
+            quantity:  CartItemQuantity::fromInt(1),
+            productId: $productId
+        );
+
+        $command = UpdateItemFromCartCommand::fromPrimitives(
+            cartItemPublicId: $cartItem->publicId()->value(),
+            cartPublicId: $cart->publicId()->value(),
+            price: 10.5,
+            quantity: 1,
+            productId: $productId
+        );
+
+        $this->cartRepository
+            ->expects($this->once())
+            ->method('findByPublicId')
+            ->with($cart->publicId()->value())
+            ->willReturn($cart);
+
+        $this->cartItemRepository
+            ->expects($this->once())
+            ->method('findByPublicId')
+            ->with($cartItem->publicId()->value())
+            ->willReturn($cartItem);
+
+        $this->cartItemRepository
+            ->expects($this->never())
+            ->method('update')
+            ->willReturn($cartItem);
+
+        $this->handler->__invoke($command);
+    }
+
     public function testUpdateCartItemSuccessfully(): void
     {
         $cart       = Cart::create();
@@ -121,11 +160,11 @@ class UpdateItemFromCartCommandHandlerTest extends TestCase
             productId: $productId
         );
 
-        $command = new UpdateItemFromCartCommand(
+        $command = UpdateItemFromCartCommand::fromPrimitives(
             cartItemPublicId: $cartItem->publicId()->value(),
             cartPublicId: $cart->publicId()->value(),
-            price: 10.5,
-            quantity: 1,
+            price: 11,
+            quantity: 2,
             productId: $productId
         );
 

@@ -127,6 +127,19 @@ readonly class CartItem
         return $this->price()->asDecimal() * $this->quantity()->value();
     }
 
+    public function isEqualTo(CartItem $other): bool
+    {
+        return $this->id()->equals($other->id())
+            && $this->publicId()->equals($other->publicId())
+            && $this->cartId()->equals($other->cartId())
+            && $this->price()->equals($other->price())
+            && $this->quantity()->equals($other->quantity())
+            && $this->productId() === $other->productId()
+            && $this->name() === $other->name()
+            && $this->color() === $other->color()
+            && $this->size() === $other->size();
+    }
+
     public function toArray(): array
     {
         return [

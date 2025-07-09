@@ -8,32 +8,42 @@ use App\Domain\Cart\ValueObject\CartItemQuantity;
 use App\Domain\Cart\ValueObject\CartPublicId;
 use App\Domain\Shared\Exception\InvalidUuid;
 
-class UpdateItemFromCartCommand
+readonly class UpdateItemFromCartCommand
 {
-    private CartPublicId $cartPublicId;
-
-    private CartItemPublicId $cartItemPublicId;
-    private CartItemPrice $price;
-    private CartItemQuantity $quantity;
+    public function __construct(
+        private CartItemPublicId  $cartItemPublicId,
+        private CartPublicId      $cartPublicId,
+        private ?CartItemPrice    $price = null,
+        private ?CartItemQuantity $quantity = null,
+        private ?int              $productId = null,
+        private ?string           $name = null,
+        private ?string           $color = null,
+        private ?string           $size = null,
+    ) {}
 
     /**
      * @throws InvalidUuid
      */
-    public function __construct(
-        string $cartItemPublicId,
-        string $cartPublicId,
-        float $price,
-        int $quantity,
-        private readonly int $productId,
-        private readonly ?string $name = null,
-        private readonly ?string $color = null,
-        private readonly ?string $size = null,
-    )
-    {
-        $this->cartPublicId = CartPublicId::fromUuid($cartPublicId);
-        $this->cartItemPublicId = CartItemPublicId::fromUuid($cartItemPublicId);
-        $this->price = CartItemPrice::fromFloat($price);
-        $this->quantity = CartItemQuantity::fromInt($quantity);
+    public static function fromPrimitives(
+        string  $cartItemPublicId,
+        string  $cartPublicId,
+        ?float  $price = null,
+        ?int    $quantity = null,
+        ?int    $productId = null,
+        ?string $name = null,
+        ?string $color = null,
+        ?string $size = null,
+    ): self {
+        return new self(
+            cartItemPublicId:  CartItemPublicId::fromUuid($cartItemPublicId),
+            cartPublicId: CartPublicId::fromUuid($cartPublicId),
+            price: $price !== null ? CartItemPrice::fromFloat($price) : null,
+            quantity:  $quantity !== null ? CartItemQuantity::fromInt($quantity) : null,
+            productId: $productId,
+            name: $name,
+            color: $color,
+            size: $size,
+        );
     }
 
     public function cartPublicId(): CartPublicId
@@ -46,11 +56,11 @@ class UpdateItemFromCartCommand
         return $this->cartItemPublicId;
     }
 
-    public function price(): CartItemPrice {
+    public function price(): ?CartItemPrice {
         return $this->price;
     }
 
-    public function productId(): int
+    public function productId(): ?int
     {
         return $this->productId;
     }
@@ -67,7 +77,7 @@ class UpdateItemFromCartCommand
         return $this->size;
     }
 
-    public function quantity(): CartItemQuantity {
+    public function quantity(): ?CartItemQuantity {
         return $this->quantity;
     }
 }

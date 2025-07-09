@@ -40,7 +40,7 @@ readonly class DoctrineCartItemRepository implements CartItemRepositoryInterface
     public function findByPublicId(string $publicId): ?CartItem
     {
         $repository = $this->em->getRepository(DoctrineCartItem::class);
-        $cartItem = $repository->findOneBy(['public_id' => $publicId]);
+        $cartItem = $repository->findOneBy(['publicId' => $publicId]);
 
         if  ($cartItem === null) {
             return null;
