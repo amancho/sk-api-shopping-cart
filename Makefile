@@ -37,7 +37,7 @@ composer-install:
 	${DOCKER_EXEC} ${PHP_CONTAINER} composer install --no-interaction
 
 test:
-	${DOCKER_EXEC} ${PHP_CONTAINER} ${PHPUNIT} --no-coverage --stop-on-error --stop-on-failure
+	${DOCKER_EXEC} ${PHP_CONTAINER} ${PHPUNIT} --stderr --no-coverage --stop-on-error --stop-on-failure
 
 test-coverage:
 	${DOCKER_EXEC} ${PHP_CONTAINER} ${PHPUNIT} --coverage-html var/coverage/

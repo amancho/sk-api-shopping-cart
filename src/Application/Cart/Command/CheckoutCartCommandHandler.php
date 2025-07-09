@@ -4,10 +4,12 @@ namespace App\Application\Cart\Command;
 
 use App\Application\Cart\Shared\CartValidator;
 use App\Domain\Cart\Events\CartCheckoutEvent;
+use App\Domain\Cart\Exception\CartEmptyException;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
 use App\Domain\Cart\ValueObject\CartPublicId;
+use App\Domain\Shared\Exception\InvalidUuid;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -26,11 +28,12 @@ readonly class CheckoutCartCommandHandler
      * @throws ExceptionInterface
      * @throws CartInvalidStatusException
      * @throws CartNotFoundException
+     * @throws CartEmptyException
+     * @throws InvalidUuid
      */
     public function __invoke(CheckoutCartCommand $command): void
     {
         $cart = $this->getActiveCart(CartPublicId::fromUuid($command->publicId()));
-
         $cart->checkout($command->checkoutId());
 
         $this->cartRepository->update($cart);

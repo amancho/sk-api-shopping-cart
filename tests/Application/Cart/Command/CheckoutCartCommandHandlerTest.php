@@ -5,11 +5,15 @@ namespace App\Tests\Application\Cart\Command;
 use App\Application\Cart\Command\CheckoutCartCommand;
 use App\Application\Cart\Command\CheckoutCartCommandHandler;
 use App\Domain\Cart\Entity\Cart;
+use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Events\CartCheckoutEvent;
+use App\Domain\Cart\Exception\CartEmptyException;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
 use App\Domain\Cart\ValueObject\CartId;
+use App\Domain\Cart\ValueObject\CartItemPrice;
+use App\Domain\Cart\ValueObject\CartItemQuantity;
 use App\Domain\Cart\ValueObject\CartStatus;
 use App\Domain\Shared\ValueObject\Uuid;
 use InvalidArgumentException;
@@ -85,9 +89,36 @@ class CheckoutCartCommandHandlerTest extends TestCase
         $this->handler->__invoke($command);
     }
 
+    public function testShouldThrowExceptionIfCartIsEmpty(): void
+    {
+        $cart = Cart::create();
+
+        $command = new CheckoutCartCommand(
+            publicId: $cart->publicId()->value(),
+            checkoutId: md5('1234567890')
+        );
+
+        $this->repository->expects($this->once())
+            ->method('findByPublicId')
+            ->with($command->publicId())
+            ->willReturn($cart);
+
+        $this->expectException(CartEmptyException::class);
+
+        $this->handler->__invoke($command);
+    }
+
     public function testCartCheckoutSuccessfully(): void
     {
         $cart = Cart::create();
+        $cart->addItem(
+            CartItem::create(
+                cartId: $cart->id(),
+                price: CartItemPrice::fromInt(100),
+                quantity: CartItemQuantity::fromInt(1),
+                productId: 66
+            )
+        );
 
         $command = new CheckoutCartCommand(
             publicId: $cart->publicId()->value(),

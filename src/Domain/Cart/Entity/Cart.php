@@ -2,6 +2,7 @@
 
 namespace App\Domain\Cart\Entity;
 
+use App\Domain\Cart\Exception\CartEmptyException;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\ValueObject\CartCode;
 use App\Domain\Cart\ValueObject\CartId;
@@ -160,11 +161,16 @@ class Cart
 
     /**
      * @throws CartInvalidStatusException
+     * @throws CartEmptyException
      */
     public function checkout(string $checkoutId): void
     {
         if (!$this->isActive()) {
             throw CartInvalidStatusException::create($this->status());
+        }
+
+        if (count($this->items()) == 0) {
+            throw CartEmptyException::create($this->id());
         }
 
         $this->checkoutId = $checkoutId;
