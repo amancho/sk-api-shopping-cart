@@ -6,7 +6,7 @@ use App\Infrastructure\Shared\Persistence\Doctrine\Entity\AbstractTimestampedEnt
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'cart_items', indexes: [new ORM\Index(name: 'public_id_idx', columns: ['publicId'])])]
+#[ORM\Table(name: 'cart_items', indexes: [new ORM\Index(name: 'public_id_idx', columns: ['public_id'])])]
 #[ORM\HasLifecycleCallbacks]
 class DoctrineCartItem extends AbstractTimestampedEntity
 {

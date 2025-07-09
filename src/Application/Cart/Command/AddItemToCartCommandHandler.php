@@ -2,6 +2,7 @@
 
 namespace App\Application\Cart\Command;
 
+use App\Application\Cart\Shared\CartValidator;
 use App\Domain\Cart\Entity\CartItem;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartNotFoundException;
@@ -12,6 +13,8 @@ use App\Domain\Shared\Exception\InvalidUuid;
 
 readonly class AddItemToCartCommandHandler
 {
+    use CartValidator;
+
     public function __construct(
         private CartRepositoryInterface     $cartRepository,
         private CartItemRepositoryInterface $cartItemRepository
@@ -27,14 +30,7 @@ readonly class AddItemToCartCommandHandler
      */
     public function __invoke(AddItemToCartCommand $command): string
     {
-        $cart = $this->cartRepository->findByPublicId($command->cartPublicId()->value());
-        if ($cart === null) {
-            throw CartNotFoundException::create($command->cartPublicId()->value());
-        }
-
-        if (!$cart->isActive()) {
-            throw CartInvalidStatusException::create($cart->status());
-        }
+        $cart = $this->getActiveCart($command->cartPublicId());
 
         $cartItem = $this->cartItemRepository->findByCartIdAndProductId(
             $cart->id(),

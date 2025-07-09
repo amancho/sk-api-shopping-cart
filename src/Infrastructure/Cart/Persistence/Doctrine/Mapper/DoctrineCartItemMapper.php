@@ -46,13 +46,14 @@ class DoctrineCartItemMapper
      */
     public static function toDomain(DoctrineCartItem $doctrineCartItem): CartItem
     {
-        return new CartItem(
-            id: CartItemId::fromInt($doctrineCartItem->getId()),
-            publicId: CartItemPublicId::fromUuid($doctrineCartItem->getPublicId()),
-            cartId: CartId::fromInt($doctrineCartItem->getCart()->getId()),
-            price: CartItemPrice::fromInt($doctrineCartItem->getPrice()),
-            quantity: CartItemQuantity::fromInt($doctrineCartItem->getQuantity()),
+        return CartItem::build(
+            id: $doctrineCartItem->getId(),
+            publicId: $doctrineCartItem->getPublicId(),
+            cartId: $doctrineCartItem->getCart()->getId(),
+            price: $doctrineCartItem->getPrice(),
+            quantity: $doctrineCartItem->getQuantity(),
             productId: $doctrineCartItem->getProductId(),
+            name: $doctrineCartItem->getName(),
             color: $doctrineCartItem->getColor(),
             size: $doctrineCartItem->getSize()
         );
