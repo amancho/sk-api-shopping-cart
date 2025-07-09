@@ -8,7 +8,9 @@ use App\Domain\Cart\Exception\CartEmptyException;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
+use App\Domain\Cart\Service\CartCheckoutService;
 use App\Domain\Cart\ValueObject\CartPublicId;
+use App\Domain\Order\Repository\OrderRepositoryInterface;
 use App\Domain\Shared\Exception\InvalidUuid;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -18,7 +20,9 @@ readonly class CheckoutCartCommandHandler
     use CartValidator;
 
     public function __construct(
+        private CartCheckoutService $cartCheckoutService,
         private CartRepositoryInterface $cartRepository,
+        private OrderRepositoryInterface $orderRepository,
         private MessageBusInterface $eventBus
     )
     {
@@ -37,6 +41,10 @@ readonly class CheckoutCartCommandHandler
         $cart->checkout($command->checkoutId());
 
         $this->cartRepository->update($cart);
+
+        $order = $this->cartCheckoutService->createOrderFromCart($cart);
+
+        $this->orderRepository->save($order);
 
         $this->eventBus->dispatch(
             new CartCheckoutEvent($cart->id(), $cart->checkoutId())

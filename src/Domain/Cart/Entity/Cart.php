@@ -194,4 +194,16 @@ class Cart
     {
         return $this->items;
     }
+
+    public function totalAmount(): int
+    {
+        $total = 0;
+
+        /** @var CartItem $item */
+        foreach ($this->items() as $item) {
+            $total += $item->total();
+        }
+
+        return $total * 100;
+    }
 }

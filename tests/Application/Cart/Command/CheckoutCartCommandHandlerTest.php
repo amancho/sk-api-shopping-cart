@@ -11,10 +11,12 @@ use App\Domain\Cart\Exception\CartEmptyException;
 use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\Exception\CartNotFoundException;
 use App\Domain\Cart\Repository\CartRepositoryInterface;
+use App\Domain\Cart\Service\CartCheckoutService;
 use App\Domain\Cart\ValueObject\CartId;
 use App\Domain\Cart\ValueObject\CartItemPrice;
 use App\Domain\Cart\ValueObject\CartItemQuantity;
 use App\Domain\Cart\ValueObject\CartStatus;
+use App\Domain\Order\Repository\OrderRepositoryInterface;
 use App\Domain\Shared\ValueObject\Uuid;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -24,16 +26,21 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class CheckoutCartCommandHandlerTest extends TestCase
 {
     private CheckoutCartCommandHandler $handler;
-    private CartRepositoryInterface $repository;
+    private CartRepositoryInterface $cartRepository;
+    private OrderRepositoryInterface $orderRepository;
     private MessageBusInterface $bus;
 
     protected function setUp(): void
     {
-        $this->repository   = $this->createMock(CartRepositoryInterface::class);
-        $this->bus          = $this->createMock(MessageBusInterface::class);
+        $this->cartCheckoutService  = $this->createMock(CartCheckoutService::class);
+        $this->cartRepository       = $this->createMock(CartRepositoryInterface::class);
+        $this->orderRepository      = $this->createMock(OrderRepositoryInterface::class);
+        $this->bus                  = $this->createMock(MessageBusInterface::class);
 
         $this->handler = new CheckoutCartCommandHandler(
-            $this->repository,
+            $this->cartCheckoutService,
+            $this->cartRepository,
+            $this->orderRepository,
             $this->bus
         );
     }
@@ -52,7 +59,7 @@ class CheckoutCartCommandHandlerTest extends TestCase
 
         $command = new CheckoutCartCommand($cardPublicId, $checkoutId);
 
-        $this->repository->expects($this->once())
+        $this->cartRepository->expects($this->once())
             ->method('findByPublicId')
             ->with($command->publicId())
             ->willReturn(null);
@@ -79,7 +86,7 @@ class CheckoutCartCommandHandlerTest extends TestCase
             checkoutId: $checkoutId
         );
 
-        $this->repository->expects($this->once())
+        $this->cartRepository->expects($this->once())
             ->method('findByPublicId')
             ->with($command->publicId())
             ->willReturn($cart);
@@ -98,7 +105,7 @@ class CheckoutCartCommandHandlerTest extends TestCase
             checkoutId: md5('1234567890')
         );
 
-        $this->repository->expects($this->once())
+        $this->cartRepository->expects($this->once())
             ->method('findByPublicId')
             ->with($command->publicId())
             ->willReturn($cart);
@@ -125,10 +132,16 @@ class CheckoutCartCommandHandlerTest extends TestCase
             checkoutId: md5('1234567890')
         );
 
-        $this->repository->expects($this->once())
+        $this->cartRepository->expects($this->once())
             ->method('findByPublicId')
             ->with($command->publicId())
             ->willReturn($cart);
+
+        $this->cartCheckoutService->expects($this->once())
+            ->method('createOrderFromCart');
+
+        $this->orderRepository->expects($this->once())
+            ->method('save');
 
         $this->bus->expects($this->once())
             ->method('dispatch')
