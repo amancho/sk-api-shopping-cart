@@ -33,7 +33,9 @@
         </include>
 
         <exclude>
-            <directory>src/Infrastructure</directory>
+            <directory>src/Infrastructure/Cart/Persistence</directory>
+            <directory>src/Infrastructure/Order/Persistence</directory>
+            <directory>src/Infrastructure/Shared/Persistence</directory>
         </exclude>
 
         <deprecationTrigger>

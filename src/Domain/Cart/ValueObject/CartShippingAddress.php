@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Domain\Cart\Entity;
+namespace App\Domain\Cart\ValueObject;
 
 readonly class CartShippingAddress
 {
