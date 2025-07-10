@@ -533,7 +533,7 @@
                     "Cart"
                 ],
                 "summary": "Checkout Cart",
-                "description": "Finish checkout process",
+                "description": "Finish checkout process and create order",
                 "parameters": [
                     {
                         "name": "id",
@@ -612,14 +612,6 @@
         {
             "name": "Cart",
             "description": "Cart management actions (create, update, get, add product, remove product, checkout)"
-        },
-        {
-            "name": "Product",
-            "description": "Product management actions"
-        },
-        {
-            "name": "Order",
-            "description": "Order management actions"
         }
     ]
 }

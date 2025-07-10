@@ -1,5 +1,5 @@
 # sk-api-checkout
-API to manage shopping cart actions and checkout process
+API to manage shopping cart actions (create, add item, update item and remove item) and checkout process
 
 ## How it works
 1. **Incoming Request**:
@@ -53,24 +53,22 @@ API to manage shopping cart actions and checkout process
 │   │   ├── Cart
 │   │   │   ├── Command
 │   │   │   └── Query
-|   │   ├── Order
-│   │   └── Product
+│   │   └── Order
 │   ├── Domain
 │   │   ├── Cart
 │   │   │   ├── Entity
 │   │   │   ├── Events
 │   │   │   ├── Exception
 │   │   │   ├── Repository
+│   │   │   ├── Service
 │   │   │   └── ValueObject
 |   │   ├── Order
-│   │   ├── Product
 |   │   └── Shared
 │   ├── Infrastructure
 │   │   ├── Cart
 │   │   │   ├── Persitence
 │   │   │   └── Symfony
 |   │   ├── Order
-│   │   ├── Product
 |   │   └── Shared
 │   │   │   └── Persistence
 │   └── Kernel.php
@@ -134,7 +132,7 @@ http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23/item/62bf234f-
 http://172.33.0.4:8080/carts/31bf234f-984a-4df8-8f03-e0ea81bddc23/item/62bf234f-984a-4df8-8f03-e0ea81bddc46
 ```
 
-## Execute phpstan to static analysis
+### Execute phpstan to static analysis
 
 ```
 make phpstan
@@ -144,4 +142,12 @@ make phpstan
 
 ```
 make test
+```
+
+### Execute tests with coverage
+
+Generate html report at /var/coverage
+
+```
+make test-coverage
 ```
