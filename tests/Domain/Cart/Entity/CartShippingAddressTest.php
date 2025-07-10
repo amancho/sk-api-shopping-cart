@@ -2,7 +2,7 @@
 
 namespace App\Tests\Domain\Cart\Entity;
 
-use App\Domain\Cart\Entity\CartShippingAddress;
+use App\Domain\Cart\ValueObject\CartShippingAddress;
 use PHPUnit\Framework\TestCase;
 
 final class CartShippingAddressTest extends TestCase

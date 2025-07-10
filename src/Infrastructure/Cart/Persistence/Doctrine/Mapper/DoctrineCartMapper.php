@@ -4,7 +4,7 @@ namespace App\Infrastructure\Cart\Persistence\Doctrine\Mapper;
 
 use App\Domain\Cart\Entity\Cart;
 use App\Domain\Cart\Entity\CartItem;
-use App\Domain\Cart\Entity\CartShippingAddress;
+use App\Domain\Cart\ValueObject\CartShippingAddress;
 use App\Domain\Cart\ValueObject\CartShippingEmail;
 use App\Domain\Cart\ValueObject\CartShippingPhone;
 use App\Domain\Cart\ValueObject\CartStatus;
@@ -42,7 +42,7 @@ class DoctrineCartMapper
         $doctrineCart->setCheckoutId($cart->checkoutId());
         $doctrineCart->setUserId($cart->userId());
         $doctrineCart->setOrderId($cart->orderId());
-        $doctrineCart->setMetadata($cart->meta());
+        $doctrineCart->setMetadata($cart->metadata());
 
         return $doctrineCart;
     }

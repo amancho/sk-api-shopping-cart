@@ -77,7 +77,7 @@ readonly class DoctrineCartRepository implements CartRepositoryInterface
         $doctrineCart->setUserId($cart->userId());
         $doctrineCart->setOrderId($cart->orderId());
         $doctrineCart->setSessionId($cart->sessionId());
-        $doctrineCart->setMetadata($cart->meta());
+        $doctrineCart->setMetadata($cart->metadata());
         $doctrineCart->setCheckoutId($cart->checkoutId());
 
         $doctrineCart->setShippingName($cart->shippingAddress()?->name());

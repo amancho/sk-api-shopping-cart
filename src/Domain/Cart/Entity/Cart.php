@@ -7,6 +7,7 @@ use App\Domain\Cart\Exception\CartInvalidStatusException;
 use App\Domain\Cart\ValueObject\CartCode;
 use App\Domain\Cart\ValueObject\CartId;
 use App\Domain\Cart\ValueObject\CartPublicId;
+use App\Domain\Cart\ValueObject\CartShippingAddress;
 use App\Domain\Cart\ValueObject\CartShippingEmail;
 use App\Domain\Cart\ValueObject\CartShippingPhone;
 use App\Domain\Cart\ValueObject\CartStatus;
@@ -149,7 +150,7 @@ class Cart
         return $this->orderId;
     }
 
-    public function meta(): ?array
+    public function metadata(): ?array
     {
         return $this->metadata;
     }
