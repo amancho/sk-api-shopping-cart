@@ -54,7 +54,7 @@ class DoctrineCartMapper
     {
         $shippingAddress = CartShippingAddress::build(
             name: $doctrineCart->getShippingName(),
-            address: $doctrineCart->getShippingName(),
+            address: $doctrineCart->getShippingAddress(),
             city: $doctrineCart->getShippingCity(),
             postalCode: $doctrineCart->getShippingPostalCode(),
             province: $doctrineCart->getShippingProvince(),

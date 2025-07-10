@@ -30,7 +30,7 @@ readonly class UpdateCartCommand
         string $address,
         string $city,
         string $email,
-        ?string$phone = null,
+        ?string $phone = null,
         ?string $country = null,
         ?string $postal_code = null,
         ?string $province = null,

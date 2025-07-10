@@ -212,6 +212,119 @@
                         }
                     }
                 }
+            },
+            "put": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Update cart",
+                "description": "Update cart data by public uuid",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart public uuid",
+                        "required": true,
+                        "example": "501c4b5b-00f9-49ef-a649-969caf8e95c0",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Customer name",
+                                        "example": "Pepe Manteca"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Customer email address",
+                                        "example": "pmanteca@dev.io"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "description": "Customer address",
+                                        "example": "Rue del Percebe, 13"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "Customer city",
+                                        "example": "Ripollet"
+                                    },
+                                    "postal_code": {
+                                        "type": "string",
+                                        "description": "Customer postal code",
+                                        "example": "08210"
+                                    },
+                                    "province": {
+                                        "type": "string",
+                                        "description": "Customer province",
+                                        "example": "Barcelona"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "description": "Customer country",
+                                        "example": "España"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "Customer phone number",
+                                        "example": "666555444"
+                                    }
+                                },
+                                "required": ["name", "email", "address", "city"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not found cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Cart with id # not found"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unknown error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "example": [
+                                                "Unknown error"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/carts/{id}/items": {

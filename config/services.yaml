@@ -34,6 +34,9 @@ services:
     App\Application\Cart\Command\RemoveItemFromCartCommandHandler:
         tags: [ 'messenger.message_handler' ]
 
+    App\Application\Cart\Command\UpdateCartCommandHandler:
+        tags: [ 'messenger.message_handler' ]
+
     App\Application\Cart\Command\UpdateItemFromCartCommandHandler:
         tags: [ 'messenger.message_handler' ]
 
