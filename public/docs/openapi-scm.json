@@ -355,7 +355,7 @@
                                 "properties": {
                                     "price": {
                                         "type": "number",
-                                        "description": "Price in €",
+                                        "description": "Price in € (stored in cents)",
                                         "example": 7.5
                                     },
                                     "quantity": {
@@ -489,7 +489,7 @@
                                 "properties": {
                                     "price": {
                                         "type": "number",
-                                        "description": "Price in €",
+                                        "description": "Price in € (stored in cents)",
                                         "example": 7.5
                                     },
                                     "quantity": {

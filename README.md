@@ -88,6 +88,7 @@ API to manage shopping cart actions (create, add item, update item and remove it
 - Follow this steps to create a local database with dummy data set.
 - Please wait a couple of seconds after running each command so the services can start properly.
 - Check cart.public_id to add, modify and delete products
+- `price` fields are stored in cents to avoid decimal issues.
 
 ### Build and start
 ```

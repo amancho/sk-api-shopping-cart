@@ -19,7 +19,6 @@ class UpdateCartControllerTest extends TestCase
 {
     private MessageBusInterface $bus;
 
-
     protected function setUp(): void
     {
         $this->bus = $this->createStub(MessageBusInterface::class);
@@ -34,18 +33,34 @@ class UpdateCartControllerTest extends TestCase
         $this->assertStringContainsString('Invalid data', $response->getContent());
     }
 
-    public function testItFailsUpdateWithUnknownError(): void
+    public function testItFailsUpdateWithInvalidEmail(): void
     {
-        $this->bus
-            ->method('dispatch')
-            ->willThrowException(new RuntimeException('Unknown error'));
-
         $controller = new UpdateCartController($this->bus);
 
         $request = new Request([], [], [], [], [], [], json_encode(['email' => '0']));
         $response = $controller->update($request,  Uuid::asString());
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+
+    public function testItFailsAddProductWithUnknownError(): void
+    {
+        $this->bus
+            ->method('dispatch')
+            ->willThrowException(new RuntimeException('Unknown error'));
+
+        $controller = new UpdateCartController($this->bus);
+        $payload = [
+            'name'      => 'Pepe Gotera',
+            'address'   => 'Rue del Percebe, 13',
+            'city'      => 'Madrid',
+            'email'     => 'test@dev.io'
+        ];
+
+        $request = new Request([], [], [], [], [], [], json_encode($payload));
+        $response = $controller->update($request,  Uuid::asString());
+
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
     }
 
     public function testItUpdateCartSuccessfully(): void

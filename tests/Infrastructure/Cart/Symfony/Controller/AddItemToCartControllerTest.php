@@ -33,6 +33,16 @@ class AddItemToCartControllerTest extends TestCase
         $this->assertStringContainsString('Invalid data', $response->getContent());
     }
 
+    public function testItFailsAddProductWithInvalidQuantity(): void
+    {
+        $controller = new AddItemToCartController($this->bus);
+
+        $request = new Request([], [], [], [], [], [], json_encode([ 'quantity' => 0]));
+        $response = $controller->add($request,  Uuid::asString());
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+
     public function testItFailsAddProductWithUnknownError(): void
     {
         $this->bus
@@ -40,11 +50,16 @@ class AddItemToCartControllerTest extends TestCase
             ->willThrowException(new RuntimeException('Unknown error'));
 
         $controller = new AddItemToCartController($this->bus);
+        $payload = [
+            'quantity'      => 1,
+            'price'         => 0.5,
+            'product_id'    => 55,
+        ];
 
-        $request = new Request([], [], [], [], [], [], json_encode(['quantity' => '0']));
+        $request = new Request([], [], [], [], [], [], json_encode($payload));
         $response = $controller->add($request,  Uuid::asString());
 
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
     }
 
     public function testItAddItemToCartSuccessfully(): void
