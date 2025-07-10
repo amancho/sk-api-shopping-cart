@@ -41,7 +41,6 @@
 # PHPUnit
 /app/phpunit.xml
 /phpunit.xml
-/phpunit.dist.xml
 /.phpunit.cache/
 
 # Build data

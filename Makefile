@@ -22,7 +22,7 @@ prepare:
 init-db:
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console doctrine:migrations:migrate --no-interaction
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console doctrine:fixtures:load --append
-	${DOCKER_EXEC} -it ${PHP_CONTAINER} php php bin/console messenger:setup-transports
+	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console messenger:setup-transports
 
 migrations:
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console doctrine:migrations:migrate
