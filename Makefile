@@ -27,6 +27,9 @@ init-db:
 migrations:
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console doctrine:migrations:migrate
 
+doctrine-diff:
+	${DOCKER_EXEC} -it ${PHP_CONTAINER} php bin/console doctrine:migrations:diff
+
 ssh:
 	${DOCKER_EXEC} -it ${PHP_CONTAINER} bash
 
@@ -37,7 +40,7 @@ composer-install:
 	${DOCKER_EXEC} ${PHP_CONTAINER} composer install --no-interaction
 
 test:
-	${DOCKER_EXEC} ${PHP_CONTAINER} ${PHPUNIT} --no-coverage --stop-on-error --stop-on-failure
+	${DOCKER_EXEC} ${PHP_CONTAINER} ${PHPUNIT} --stderr --no-coverage --stop-on-error --stop-on-failure
 
 test-coverage:
 	${DOCKER_EXEC} ${PHP_CONTAINER} ${PHPUNIT} --coverage-html var/coverage/

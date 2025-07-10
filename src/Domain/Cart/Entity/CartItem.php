@@ -149,7 +149,7 @@ readonly class CartItem
             'color'        => $this->color(),
             'size'         => $this->size(),
             'quantity'     => $this->quantity()->value(),
-            'price'        => $this->price()->asDecimal(),
+            'price'        => $this->price()->value(),
             'total'        => $this->total(),
         ];
     }

@@ -12,3 +12,10 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Infrastructure/Cart/Persistence/Doctrine/Entity'
                 prefix: 'App\Infrastructure\Cart\Persistence\Doctrine\Entity'
                 alias: Cart
+
+            Order:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Infrastructure/Order/Persistence/Doctrine/Entity'
+                prefix: 'App\Infrastructure\Order\Persistence\Doctrine\Entity'
+                alias: Order
